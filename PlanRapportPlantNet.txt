@@ -1,0 +1,88 @@
+PLAN RAPPORT PLANTNET
+
+Plan du rapport
+1. Introduction
+1.1 Contexte
+
+1.2 Problématique
+
+1.3 Objectifs
+
+1.4 Plan du rapport
+
+2. État de l'art
+2.1 Classification multi-classes et longue traîne
+
+2.2 Prédiction conformelle (Conformal Prediction)
+
+2.3 Méthode PAS pour les classes rares
+
+2.4 Temperature scaling
+
+3. Matériel et méthodes
+3.1 Base de données Pl@ntNet-CrowdSWE
+
+3.2 Prétraitement des données
+
+3.3 Split conformal prediction
+
+3.4 Métriques d'évaluation
+
+4. Résultats
+4.1 Analyse exploratoire
+
+4.2 Résultats baseline
+
+4.3 Analyse par espèce
+
+4.4 Comparaison des méthodes
+
+5. Discussion
+5.1 Interprétation
+
+5.2 Limites
+
+5.3 Travaux futurs
+
+6. Conclusion
+Références
+Angelopoulos, A. N., & Bates, S. (2021). A gentle introduction to conformal prediction and distribution-free uncertainty quantification. arXiv preprint arXiv:2107.07511.
+
+Lefort, T., et al. (2024). Pl@ntNet collaborative learning: South-Western-Europe dataset. arXiv:2406.03356.
+
+Ding, T., Fermanian, J.-B., Salmon, J. (2025). Conformal Prediction for Long-Tailed Classification. arXiv:2507.06867.
+
+Dabah, L., & Tirer, T. (2024). On Temperature Scaling and Conformal Prediction of Deep Classifiers.
+
+Annexes
+Annexe A : Code source principal
+
+A.1 Chargement et prétraitement des données
+A.2 Découpage calibration/test avec ShuffleSplit
+A.3 Fusion avec les scores softmax
+A.4 Calcul du seuil (conformal prediction)
+A.5 Construction des ensembles de prédiction
+A.6 Évaluation (couverture, taille des ensembles)
+
+Annexe B : Tables supplémentaires
+
+B.1 Couverture par espèce (top 10 communes)
+B.2 Couverture par espèce (top 10 rares)
+B.3 Taille moyenne des ensembles par espèce
+
+Annexe C : Figures supplémentaires
+
+C.1 Distribution complète des scores
+C.2 Histogramme des tailles d'ensembles
+C.3 Couverture en fonction du nombre d'images par espèce
+
+À compléter au fur et à mesure
+Section	État
+Introduction	À rédiger
+État de l'art	À rédiger
+Matériel et méthodes	À rédiger
+Résultats	À produire après code
+Discussion	À rédiger
+Conclusion	À rédiger
+Références	✅ Prêtes
+Annexes	À compléter après code

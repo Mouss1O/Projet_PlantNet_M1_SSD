@@ -1,0 +1,10 @@
+metric,value
+n_obs_cal,10812.0
+n_obs_test,10812.0
+n_sp_cal,2458.0
+n_sp_test,2401.0
+sp_communes,1777.0
+sp_cal_only,681.0
+sp_orphelines,624.0
+obs_orphelines,855.0
+pct_obs_orphelines,7.91

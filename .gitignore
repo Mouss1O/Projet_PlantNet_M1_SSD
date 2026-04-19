@@ -1,23 +1,23 @@
-# ============================================================
 # FICHIERS TROP LOURDS (> 100 MB, limite GitHub)
-# ============================================================
 
-# Scores IA bruts et convertis (1.9 GB et 2.1 GB)
+# Scores IA
 Données/ai_scores/ai_scores_all.json
 Données/ai_scores/ai_scores_all.csv
+Données/ai_scores/ai_scores.json
 
-# Votes volumineux (plusieurs centaines de MB)
+# Votes volumineux
 Données/votes/ai_votes.json
 Données/votes/human_votes.json
 Données/votes/PN_valid_votes.json
 Données/votes/ground_truth.json
 
+# Converters volumineux
+Données/converters/authors.json
+
 # Archives
 *.zip
 
-# ============================================================
-# PYTHON
-# ============================================================
+# Python
 __pycache__/
 *.pyc
 *.pyo
@@ -25,15 +25,11 @@ __pycache__/
 env/
 venv/
 
-# ============================================================
 # IDE
-# ============================================================
 .vscode/
 .idea/
 *.swp
 
-# ============================================================
 # OS
-# ============================================================
 .DS_Store
 Thumbs.db

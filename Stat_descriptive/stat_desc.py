@@ -6,14 +6,19 @@ Stats descriptives sur ai_scores_all.csv
 import pandas as pd
 import numpy as np
 import matplotlib
-matplotlib.use('Agg')  # Backend sans affichage interactif (economie RAM)
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import os
 import sys
 
-BASE        = r"C:\Users\SCD-UM\Documents\Projet_PlantNet_M1_SSD"
-PATH_SCORES = os.path.join(BASE, "Données", "ai_scores", "ai_scores_all.csv")
-DIR_FIG     = os.path.join(BASE, "figures")
+# ================================================================
+# CHEMINS RELATIFS
+# ================================================================
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT       = os.path.dirname(SCRIPT_DIR)
+
+PATH_SCORES = os.path.join(ROOT, "Données", "ai_scores", "ai_scores_all.csv")
+DIR_FIG     = os.path.join(ROOT, "figures")
 
 
 def gini(x):
@@ -26,6 +31,7 @@ def main():
     print("="*55)
     print("EXPLORATION ai_scores_all.csv")
     print("="*55)
+    print(f"Racine projet : {ROOT}")
     
     if not os.path.exists(PATH_SCORES):
         raise FileNotFoundError(f"Fichier manquant : {PATH_SCORES}")
@@ -72,11 +78,9 @@ def main():
     print(f"Total observations   : {len(obs_ids_seen):,}")
     print(f"Total especes        : {len(species_row_count):,}")
     
-    # Conversion en arrays (attention RAM)
     nscores_arr = np.fromiter(obs_nscores.values(), dtype=np.int32)
     topsc_arr   = np.fromiter((v[1] for v in obs_topscore.values()), dtype=np.float32)
     
-    # Liberer la memoire des dicts
     del obs_nscores
     
     print("\n=== Scores par observation ===")
@@ -90,7 +94,6 @@ def main():
     print(f"  < 0.5     : {(topsc_arr < 0.5).sum():,} obs ({100*(topsc_arr < 0.5).mean():.1f}%)")
     print(f"  > 0.9     : {(topsc_arr > 0.9).sum():,} obs ({100*(topsc_arr > 0.9).mean():.1f}%)")
     
-    # Long tail
     prevalence = pd.Series(species_row_count).sort_values(ascending=False)
     del species_row_count
     
@@ -123,131 +126,102 @@ def main():
     gini_val = gini(prevalence.values)
     print(f"\n  Coefficient de Gini : {gini_val:.4f}")
     
-    # Visualisations (figures SEPAREES pour economiser la RAM)
     print("\nGeneration des figures...")
     
-    # Sous-echantillonnage des histogrammes si trop gros
     def subsample(arr, max_n=500_000):
         if len(arr) > max_n:
             idx = np.random.choice(len(arr), max_n, replace=False)
             return arr[idx]
         return arr
     
-    # Figure 1 : Long tail log-log
-    try:
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ranks = np.arange(1, len(prevalence) + 1)
-        ax.loglog(ranks, prevalence.values, 'b-', linewidth=1)
-        ax.set_xlabel("Rang espece (log)")
-        ax.set_ylabel("Apparitions (log)")
-        ax.set_title("Long tail - Prevalence IA")
-        ax.grid(True, alpha=0.3)
-        plt.savefig(os.path.join(DIR_FIG, "01_long_tail.png"), dpi=100, bbox_inches='tight')
-        plt.close(fig)
-        print("  01_long_tail.png OK")
-    except Exception as e:
-        print(f"  ERREUR fig 1 : {e}")
+    # Figure 1
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ranks = np.arange(1, len(prevalence) + 1)
+    ax.loglog(ranks, prevalence.values, 'b-', linewidth=1)
+    ax.set_xlabel("Rang espece (log)")
+    ax.set_ylabel("Apparitions (log)")
+    ax.set_title("Long tail - Prevalence IA")
+    ax.grid(True, alpha=0.3)
+    plt.savefig(os.path.join(DIR_FIG, "01_long_tail.png"), dpi=100, bbox_inches='tight')
+    plt.close(fig)
+    print("  01_long_tail.png OK")
     
-    # Figure 2 : Top-1 par espece
-    try:
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ranks_t = np.arange(1, len(top1_series) + 1)
-        ax.loglog(ranks_t, top1_series.values, 'r-', linewidth=1)
-        ax.set_xlabel("Rang espece (log)")
-        ax.set_ylabel("Predictions top-1 (log)")
-        ax.set_title("Distribution des predictions top-1")
-        ax.grid(True, alpha=0.3)
-        plt.savefig(os.path.join(DIR_FIG, "02_top1_distribution.png"), dpi=100, bbox_inches='tight')
-        plt.close(fig)
-        print("  02_top1_distribution.png OK")
-    except Exception as e:
-        print(f"  ERREUR fig 2 : {e}")
+    # Figure 2
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ranks_t = np.arange(1, len(top1_series) + 1)
+    ax.loglog(ranks_t, top1_series.values, 'r-', linewidth=1)
+    ax.set_xlabel("Rang espece (log)")
+    ax.set_ylabel("Predictions top-1 (log)")
+    ax.set_title("Distribution des predictions top-1")
+    ax.grid(True, alpha=0.3)
+    plt.savefig(os.path.join(DIR_FIG, "02_top1_distribution.png"), dpi=100, bbox_inches='tight')
+    plt.close(fig)
+    print("  02_top1_distribution.png OK")
     
-    # Figure 3 : Histogramme nb scores
-    try:
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ax.hist(subsample(nscores_arr), bins=50, color='steelblue', edgecolor='white')
-        ax.axvline(np.median(nscores_arr), color='red', linestyle='--',
-                   label=f'Mediane = {int(np.median(nscores_arr))}')
-        ax.set_xlabel("Nombre de scores (top-k)")
-        ax.set_ylabel("Observations")
-        ax.set_title("Taille du top-k par observation")
-        ax.legend()
-        plt.savefig(os.path.join(DIR_FIG, "03_topk_size.png"), dpi=100, bbox_inches='tight')
-        plt.close(fig)
-        print("  03_topk_size.png OK")
-    except Exception as e:
-        print(f"  ERREUR fig 3 : {e}")
+    # Figure 3
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.hist(subsample(nscores_arr), bins=50, color='steelblue', edgecolor='white')
+    ax.axvline(np.median(nscores_arr), color='red', linestyle='--',
+               label=f'Mediane = {int(np.median(nscores_arr))}')
+    ax.set_xlabel("Nombre de scores (top-k)")
+    ax.set_ylabel("Observations")
+    ax.set_title("Taille du top-k par observation")
+    ax.legend()
+    plt.savefig(os.path.join(DIR_FIG, "03_topk_size.png"), dpi=100, bbox_inches='tight')
+    plt.close(fig)
+    print("  03_topk_size.png OK")
     
-    # Figure 4 : Confiance top-1
-    try:
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ax.hist(subsample(topsc_arr), bins=50, color='#2ca02c', edgecolor='white')
-        ax.axvline(np.median(topsc_arr), color='red', linestyle='--',
-                   label=f'Mediane = {np.median(topsc_arr):.3f}')
-        ax.set_xlabel("Score top-1")
-        ax.set_ylabel("Observations")
-        ax.set_title("Distribution confiance top-1")
-        ax.legend()
-        plt.savefig(os.path.join(DIR_FIG, "04_top1_confidence.png"), dpi=100, bbox_inches='tight')
-        plt.close(fig)
-        print("  04_top1_confidence.png OK")
-    except Exception as e:
-        print(f"  ERREUR fig 4 : {e}")
+    # Figure 4
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.hist(subsample(topsc_arr), bins=50, color='#2ca02c', edgecolor='white')
+    ax.axvline(np.median(topsc_arr), color='red', linestyle='--',
+               label=f'Mediane = {np.median(topsc_arr):.3f}')
+    ax.set_xlabel("Score top-1")
+    ax.set_ylabel("Observations")
+    ax.set_title("Distribution confiance top-1")
+    ax.legend()
+    plt.savefig(os.path.join(DIR_FIG, "04_top1_confidence.png"), dpi=100, bbox_inches='tight')
+    plt.close(fig)
+    print("  04_top1_confidence.png OK")
     
-    # Figure 5 : Courbe de Lorenz
-    try:
-        fig, ax = plt.subplots(figsize=(8, 5))
-        cum_sp = np.arange(1, len(prevalence)+1) / len(prevalence) * 100
-        ax.plot(cum_sp, cum_obs.values, 'b-', linewidth=2, label='Observe')
-        ax.plot([0,100], [0,100], 'k--', alpha=0.5, label='Uniforme')
-        ax.fill_between(cum_sp, cum_obs.values, cum_sp, alpha=0.15, color='red')
-        ax.set_xlabel("% cumule especes")
-        ax.set_ylabel("% cumule apparitions")
-        ax.set_title(f"Courbe de Lorenz (Gini = {gini_val:.3f})")
-        ax.legend()
-        ax.grid(True, alpha=0.3)
-        plt.savefig(os.path.join(DIR_FIG, "05_lorenz.png"), dpi=100, bbox_inches='tight')
-        plt.close(fig)
-        print("  05_lorenz.png OK")
-    except Exception as e:
-        print(f"  ERREUR fig 5 : {e}")
+    # Figure 5
+    fig, ax = plt.subplots(figsize=(8, 5))
+    cum_sp = np.arange(1, len(prevalence)+1) / len(prevalence) * 100
+    ax.plot(cum_sp, cum_obs.values, 'b-', linewidth=2, label='Observe')
+    ax.plot([0,100], [0,100], 'k--', alpha=0.5, label='Uniforme')
+    ax.fill_between(cum_sp, cum_obs.values, cum_sp, alpha=0.15, color='red')
+    ax.set_xlabel("% cumule especes")
+    ax.set_ylabel("% cumule apparitions")
+    ax.set_title(f"Courbe de Lorenz (Gini = {gini_val:.3f})")
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+    plt.savefig(os.path.join(DIR_FIG, "05_lorenz.png"), dpi=100, bbox_inches='tight')
+    plt.close(fig)
+    print("  05_lorenz.png OK")
     
-    # Figure 6 : Repartition par bins
-    try:
-        fig, ax = plt.subplots(figsize=(8, 5))
-        
-        bins   = [1, 2, 6, 11, 51, 101, 1001, 10001, int(prevalence.max())+1]
-        labels = ['1', '2-5', '6-10', '11-50', '51-100', '101-1k', '1k-10k', '10k+']
-        
-        hist, _ = np.histogram(prevalence.values, bins=bins)
-        colors = ['#d62728','#ff7f0e','#ffbb78','#98df8a',
-                  '#2ca02c','#1f77b4','#17becf','#9467bd']
-        
-        bars = ax.bar(range(len(labels)), hist, color=colors, edgecolor='white')
-        ax.set_xticks(range(len(labels)))
-        ax.set_xticklabels(labels, rotation=0)
-        ax.set_yscale('log')
-        ax.set_xlabel("Nb apparitions")
-        ax.set_ylabel("Especes (log)")
-        ax.set_title("Repartition par prevalence")
-        
-        for b, v in zip(bars, hist):
-            if v > 0:
-                ax.text(b.get_x()+b.get_width()/2, b.get_height()*1.15,
-                        str(int(v)), ha='center', fontsize=8)
-        
-        plt.tight_layout()
-        plt.savefig(os.path.join(DIR_FIG, "06_prevalence_bins.png"), 
-                    dpi=100, bbox_inches='tight')
-        plt.close(fig)
-        print("  06_prevalence_bins.png OK")
-    except Exception as e:
-        print(f"  ERREUR fig 6 : {e}")
-        import traceback
-        traceback.print_exc()
+    # Figure 6
+    fig, ax = plt.subplots(figsize=(8, 5))
+    bins   = [1, 2, 6, 11, 51, 101, 1001, 10001, int(prevalence.max())+1]
+    labels = ['1', '2-5', '6-10', '11-50', '51-100', '101-1k', '1k-10k', '10k+']
+    hist, _ = np.histogram(prevalence.values, bins=bins)
+    colors = ['#d62728','#ff7f0e','#ffbb78','#98df8a',
+              '#2ca02c','#1f77b4','#17becf','#9467bd']
+    bars = ax.bar(range(len(labels)), hist, color=colors, edgecolor='white')
+    ax.set_xticks(range(len(labels)))
+    ax.set_xticklabels(labels, rotation=0)
+    ax.set_yscale('log')
+    ax.set_xlabel("Nb apparitions")
+    ax.set_ylabel("Especes (log)")
+    ax.set_title("Repartition par prevalence")
+    for b, v in zip(bars, hist):
+        if v > 0:
+            ax.text(b.get_x()+b.get_width()/2, b.get_height()*1.15,
+                    str(int(v)), ha='center', fontsize=8)
+    plt.tight_layout()
+    plt.savefig(os.path.join(DIR_FIG, "06_prevalence_bins.png"), dpi=100, bbox_inches='tight')
+    plt.close(fig)
+    print("  06_prevalence_bins.png OK")
     
-    # Export resume
     summary = {
         "n_lignes_total"       : n_rows_total,
         "n_observations"       : len(obs_ids_seen),
@@ -261,7 +235,7 @@ def main():
         "especes_lt_10"        : int((prevalence < 10).sum()),
     }
     
-    out_csv = os.path.join(BASE, "stats_summary_scores.csv")
+    out_csv = os.path.join(ROOT, "stats_summary_scores.csv")
     pd.DataFrame([summary]).to_csv(out_csv, index=False)
     print(f"\nResume CSV : {out_csv}")
     print(f"Figures    : {DIR_FIG}")

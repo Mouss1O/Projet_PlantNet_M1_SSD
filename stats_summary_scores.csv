@@ -1,0 +1,2 @@
+n_lignes_total,n_observations,n_especes_vues,topk_moyen,topk_median,score_top1_moyen,score_top1_median,gini_prevalence,especes_1_apparition,especes_lt_10
+81783751,5561512,56225,14.71,10,0.6621,0.695,0.8636,1742,9643

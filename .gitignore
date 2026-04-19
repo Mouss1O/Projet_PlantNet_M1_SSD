@@ -1,6 +1,39 @@
-*.csv
-*.json
+# ============================================================
+# FICHIERS TROP LOURDS (> 100 MB, limite GitHub)
+# ============================================================
+
+# Scores IA bruts et convertis (1.9 GB et 2.1 GB)
+Données/ai_scores/ai_scores_all.json
+Données/ai_scores/ai_scores_all.csv
+
+# Votes volumineux (plusieurs centaines de MB)
+Données/votes/ai_votes.json
+Données/votes/human_votes.json
+Données/votes/PN_valid_votes.json
+Données/votes/ground_truth.json
+
+# Archives
 *.zip
-*.csv
-*.json
-*.zip
+
+# ============================================================
+# PYTHON
+# ============================================================
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+env/
+venv/
+
+# ============================================================
+# IDE
+# ============================================================
+.vscode/
+.idea/
+*.swp
+
+# ============================================================
+# OS
+# ============================================================
+.DS_Store
+Thumbs.db

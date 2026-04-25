@@ -20,14 +20,14 @@ Si on obtient 95% ici, le code est validé.
 
 Le travaille consite à réutiliser nos scripts précedent sur des données simulées.
 
-**Données :** Données synthétiques (artificielles) générées avec `sklearn.datasets.make_blobs`
+**Données :** Données synthétiques (artificielles) générées avec `sklearn.datasets.make_classification`
 
 **Modèle :** Regression Logistique Multinomiale (avec scikit-learn`LogisticRegression(multi_class='multinomial')`)
 
 **Méthodologie détaillée :**
 
 - **Génération :** Créer un cadre de classification simplifié (un melange de gaussienne), ou nous controllons le processus generatif (disons avec 10 classes).
-Générer 10 000 points (observations) avec `sklearn.datasets.make_blobs` ($N=10 000$ observations, 2 variables explicatives ($X_1$, $X_2$) et 10 classes)
+Générer 10 000 points (observations) avec `sklearn.datasets.make_classification` ($N=10 000$ observations, 2 variables explicatives ($X_1$, $X_2$) et 10 classes)
 
 - **Shuffle/Split initial :** Diviser les données générées en deux blocs de $5000$ (Bloc A et Bloc B)
 
@@ -92,7 +92,7 @@ Cela devrait faire remonter votre couverture globale de 91% à 95%.
 
 \* **Test de la CP Conditionnelle :** 
 
-- Implémenter une version où le seuil $\hat{q}$ change selon le score softmax de l'IA (S-split).
+- Implémenter une version où le seuil $\hat{q}$ change selon le score softmax de l'IA.
 
 - **Mesure d'efficacité :** Calculer la taille moyenne des "Prediction Sets".
 

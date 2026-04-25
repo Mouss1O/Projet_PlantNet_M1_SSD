@@ -1,0 +1,123 @@
+---
+title: "Les Phases de la Partie 1"
+author: "Pl@ntNet"
+date: "2026-04-25"
+output: pdf_document
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Phase 1 : Préparation et partitionnement des données
+
+**Objectif :** Créer les fichiers définitifs de travail pour l'équipe à partir des fichiers JSON bruts du dataset Pl@ntNet-CrowdSWE.
+
+**Données :** Fichiers JSON originaux du dataset (`ground_truth.json`, `ai_scores_all.json`).
+
+**Tâches techniques :**
+
+- **Identification Expert :** Fouiller les fichiers JSON originaux ou le fichier `observations` pour trouver le tag "Expert" ou "Botaniste".
+Si l'info manque, utiliser le fichier de validation (souvent considéré comme expert).
+
+- **Scripts de partitionnement :** Écrire un script R ou Python qui génère deux types de dossiers :
+
+    - `split_random/` : Contient `calibration_50.csv` et `test_50.csv` (après un `shuffle`).
+    
+    - `split_expert/` : Contient `calibration_crowd.csv` (données non-expertes) et `test_expert.csv` (données expertes).
+
+- **Nettoyage :** S'assurer que les `observation_id` sont bien des clés uniques et qu'il n'y a pas de doublons entre calibration et test.
+
+**Méthodologie détaillée :**
+
+- **Conversion JSON $\to$ CSV :** Utiliser un parsing en *streaming* (`ijson`) car `ai_scores_all.json` pèse 1.8 GB et ne peut pas être chargé entièrement en mémoire avec `json.load()`.
+
+- **Filtrage des experts :** Ne conserver que les observations avec `ground_truth_val` $\geq 0$ (les valeurs $-1$ correspondent aux observations non validées par un expert).
+
+- **Shuffle/Split (50%/50%) :** Diviser aléatoirement les observations expertes en un ensemble de calibration ($n = 10\,812$) et un ensemble de test ($n = 10\,812$), en garantissant l'absence de chevauchement.
+
+- **Vérifications de cohérence :** Compter les doublons, vérifier l'unicité des `observation_id` et compter les espèces orphelines (présentes dans le test mais absentes de la calibration).
+
+**Livrable :** `scripts/02_data_splitting.py` (ou .R).
+
+**Résultat attendu :** Deux fichiers CSV équilibrés contenant les colonnes `observation_id` et `ground_truth_val`, prêts pour les phases suivantes.
+
+
+\newpage
+
+# Phase 2 : Implémentation de la Conformal Prediction marginale
+
+**Objectif :** Implémenter la méthode d'Angelopoulos (le standard) pour obtenir la couverture marginale cible.
+
+**Données à utiliser :** `calibration_50.csv`, `test_50.csv`, `ai_scores_all.csv`.
+
+**Tâches techniques :**
+
+- **Calcul des scores :** Sur l'ensemble de calibration, calculer le score de non-conformité $S_i = 1 - \hat{p}_{y_i}$ (où $y_i$ est la vraie espèce).
+
+- **Calcul du Quantile $\hat{q}$ :** Écrire la fonction qui calcule le quantile corrigé $\dfrac{\lceil(n+1)(1-\alpha)\rceil}{n}$ pour $\alpha = 0.05$.
+
+- **Génération des Ensembles :** Utiliser le fichier `ai_scores_all.csv` pour construire, pour chaque image de test, l'ensemble $\mathcal{C}(X) = \{y : \text{score}_y \geq 1 - \hat{q}\}$.
+
+- **Métriques :** Calculer la **Couverture** (est-on bien à 95% ?) et la **Taille moyenne** des ensembles (sont-ils petits ou énormes ?).
+
+**Méthodologie détaillée :**
+
+- **Score de non-conformité :** Pour chaque observation $i$ de l'ensemble de calibration, récupérer la probabilité softmax $\hat{p}_{y_i}$ associée à la vraie espèce $y_i$ depuis `ai_scores_all.csv`, puis calculer $S_i = 1 - \hat{p}_{y_i}$.
+
+- **Quantile conformal :** Calculer $\hat{q} = \text{Quantile}\left(\{S_1, \ldots, S_n\},\ \dfrac{\lceil(n+1)(1-\alpha)\rceil}{n}\right)$.
+La correction d'échantillon fini garantit la couverture exacte $\geq 1-\alpha$ pour tout $n$.
+
+- **Inférence sur le test :** Pour chaque observation de test $\mathbf{x}$, construire l'ensemble de prédiction $\mathcal{C}(\mathbf{x}) = \{y : \hat{p}(y \mid \mathbf{x}) \geq 1 - \hat{q}\}$.
+
+- **Évaluation :**
+
+    - **Couverture marginale :** taux global de succès $\widehat{\text{Cov}} = \frac{1}{n_{\text{test}}} \sum_i \mathbf{1}\{y_i \in \mathcal{C}(\mathbf{x}_i)\}$.
+    
+    - **Taille moyenne des ensembles :** $\overline{|\mathcal{C}|} = \frac{1}{n_{\text{test}}} \sum_i |\mathcal{C}(\mathbf{x}_i)|$.
+
+**Livrable :** `scripts/03_marginal_conformal.py`.
+
+**Résultat attendu :** Une couverture proche de 95% (cible théorique).
+Si elle est plus basse (ex: 91%), cela révèle un biais lié aux données et justifie la Phase 3 (correction).
+
+
+\newpage
+
+# Phase 3 : Méthode PAS pour le long tail
+
+**Objectif :** Résoudre le problème de la Longue Traîne en appliquant la méthode PAS (Partitioned Adaptive Set).
+
+**Données à utiliser :** `observations_experts.csv`, `ai_scores_all.csv`, `calibration_50.csv`, `test_50.csv`.
+
+**Tâches techniques :**
+
+- **Groupement par rareté :** En utilisant les stats descriptives, créer des groupes d'espèces (ex: Groupe "Rare" si $n < 10$ images, Groupe "Commun" sinon).
+
+- **Calibration par groupe :** Appliquer la logique de la Phase 2 mais de façon **indépendante** pour chaque groupe.
+On aura donc un $\hat{q}_{\text{rare}}$ et un $\hat{q}_{\text{commun}}$.
+
+- **Analyse comparative :** Comparer la couverture des espèces rares entre la méthode Baseline (Phase 2) et la méthode PAS.
+L'hypothèse est que PAS donne une meilleure couverture sur la "tail".
+
+**Méthodologie détaillée :**
+
+- **Définition des groupes :** Soit $n_k$ le nombre d'observations en calibration pour l'espèce $k$.
+On définit la fonction de groupement $g(k) = \text{rare}$ si $n_k < 10$, sinon $g(k) = \text{commun}$.
+
+- **Calibration par groupe :** Pour chaque groupe $m \in \{\text{rare}, \text{commun}\}$, calculer $\hat{q}_m = \text{Quantile}\left(\{S_i : g(y_i) = m\},\ \dfrac{\lceil(n_m+1)(1-\alpha)\rceil}{n_m}\right)$.
+
+- **Inférence avec PAS :** Pour une nouvelle observation $\mathbf{x}$, l'ensemble de prédiction est $\mathcal{C}_{\text{PAS}}(\mathbf{x}) = \{y : \hat{p}(y \mid \mathbf{x}) \geq 1 - \hat{q}_{g(y)}\}$.
+Le seuil utilisé dépend du groupe de l'espèce candidate.
+
+- **Comparaison Baseline vs PAS :** Calculer pour les deux méthodes la couverture marginale (devrait être similaire $\approx 1-\alpha$), la couverture macro (PAS devrait gagner significativement), la couverture stratifiée par fréquence d'espèce et la taille moyenne des ensembles.
+
+**Visualisation attendue :** Graphique en boîtes ou histogramme comparant la distribution des couvertures par espèce entre la méthode Baseline et PAS, mettant en évidence l'amélioration sur les espèces rares.
+
+**Livrable :** `scripts/04_pas_method.py`.
+
+**Résultat attendu :** PAS maintient une couverture macro élevée même sur les espèces qui ont très peu de photos, contrairement à la méthode standard.
+La taille des ensembles reste raisonnable (contrairement à la méthode conditionnelle stricte qui sera explorée dans la Partie 2).

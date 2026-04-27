@@ -1,0 +1,6 @@
+Métrique,Sans_correction,Avec_correction
+n_calibration,10402.0,10812.0
+q_hat,0.84758,0.97886
+seuil_score,0.15242,0.021140000000000048
+couverture_marginale,0.9153718091009989,0.9525527192008879
+taille_moyenne,1.2771920088790234,2.6630595634480208

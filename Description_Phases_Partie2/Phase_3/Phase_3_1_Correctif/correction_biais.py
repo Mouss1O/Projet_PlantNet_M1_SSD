@@ -1,6 +1,6 @@
 """
 =============================================================================
-Partie 2 — Phase 3 (Volet 1) : Correction du Biai
+Partie 2 — Phase 3 (Volet 1) : Correction du Biais
 =============================================================================
 Objectif : Atteindre les 95% de couverture marginale en corrigeant le biais
            causé par les observations manquantes dans ai_scores_all.csv.

@@ -1,1 +1,4 @@
-.csv
+# Ignorer des fichiers spécifiques
+ai_scores_all.csv
+calibration.csv
+test.csv

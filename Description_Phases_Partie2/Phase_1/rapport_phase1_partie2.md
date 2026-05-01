@@ -2,7 +2,7 @@
 
 ## Projet Pl@ntNet-CP — Prédiction Conformelle et Longue Traîne
 
-**Auteur** : Dossou Agossou  
+**Auteur** : Moussa Diagne  
 **Date** : Avril 2026  
 **Encadrants** : Joseph Salmon, Christophe Botella, Jean-Baptiste Fermanian
 

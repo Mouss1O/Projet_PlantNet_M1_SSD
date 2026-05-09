@@ -148,6 +148,8 @@ def main():
     print(f"Cible         : {1-ALPHA:.0%}")
     print(f"Replications  : {N_REPLICATIONS}")
     print(f"Bornes accept.: 94% - 96%")
+
+
     
     # Replications pour stabilite
     results = []

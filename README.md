@@ -1,102 +1,78 @@
-**Auteur :** Firda\
-**Date :** Avril 2025\
-**Projet :** [Pl\@ntNet](mailto:Pl@ntNet){.email} - Prédiction conformelle pour espèces rares
+# Conformal Prediction and Pl@ntNet-CrowdSWE-v2 database
 
-------------------------------------------------------------------------
+Welcome to our project on conformal prediction and the Pl@ntNet-CrowdSWE-v2 database for the academic year 2025-2026.
 
-## Objectif
+Name of supervisors:
 
-Implémenter la méthode de split conformal prediction (Angelopoulos & Bates, 2021) pour obtenir des ensembles de prédiction avec une garantie de couverture à 95%.
+- Joseph Salmon (joseph.salmon@inria.fr)
+- Christophe Botella (christophe.botella@inria.fr)
+- Jean-Baptiste Fermanian (jean-baptiste.fermanian@inria.fr)
 
-------------------------------------------------------------------------
+The team members are:
 
-## Méthode
+- AGOSSOU Dossou (dossou.agossou@etu.umontpellier.fr)
+- DIAGNE Moussa (moussa.diagne@etu.umontpellier.fr)
+- KARIMOU Firdaousse (firdaousse.karimou@etu.umontpellier.fr)
 
-| Étape | Description |
-|----|----|
-| 1 | Calcul des scores de non-conformité : S = 1 - score_vraie_espece |
-| 2 | Calcul du seuil q_hat = quantile(S, (n+1)(1-α)/n) |
-| 3 | Construction des ensembles : C(X) = { espèces avec score ≥ 1 - q_hat } |
-| 4 | Évaluation de la couverture et de la taille |
+---
 
-------------------------------------------------------------------------
+Pl@ntNet is a citizen science mobile application for plant identification, used by over 20 million users worldwide. Its deep learning algorithm can identify more than 75,000 species, but most of them are rare and lack sufficient training images, leading to frequent prediction errors. This project is based on the [Pl@ntNet-CrowdSWE-v2](https://zenodo.org/records/17913995) database, containing approximately 5.5 million observations of plant species in South-Western Europe, including 21,624 expert-validated observations covering 3,082 species.
 
-## Résultats
+The core challenge is the **long-tail distribution**: 80% of species have fewer than 10 observations, making standard conformal prediction methods unreliable for rare species. To address this, the project is divided into several parts:
 
-### Paramètres
+- Exploration and preprocessing of the Pl@ntNet-CrowdSWE-v2 dataset (JSON parsing, expert/non-expert splitting, stratified calibration/test partitioning)
+- Validation of the conformal prediction pipeline on synthetic data (balanced and imbalanced Gaussian mixtures)
+- Implementation and comparison of three conformal methods (Standard CP, Classwise CP, PAS CP) across three coverage notions (marginal, conditional, macro)
+- Diagnosis and correction of the truncation bias caused by the 0.001 score threshold
+- Temperature scaling optimization to reduce prediction set sizes while preserving coverage guarantees
 
--   α = 0.05 (couverture cible = 95%)
--   n_calibration = 10 402
--   q_hat = 0.847
--   Seuil sur les scores = 0.153
+The main finding is that **PAS CP** (Prevalence-Adjusted Softmax), combined with a temperature parameter T = 0.5, achieves the best trade-off: approximately 95% macro-coverage with an average prediction set size of about 4 species.
 
-### Métriques
+Here is a diagram of the architecture of our project, detailing the location of each folder and file:
 
-| Métrique        | Valeur | Objectif |
-|-----------------|--------|----------|
-| Couverture      | 91.5%  | 95%      |
-| Taille moyenne  | 1.28   | \-       |
-| Taille médiane  | 1      | \-       |
-| Ensembles vides | 0%     | 0%       |
-
-### Distribution des tailles
-
-| Taille    | Observations | Pourcentage |
-|-----------|--------------|-------------|
-| 1 espèce  | 8 163        | 75.5%       |
-| 2 espèces | 2 332        | 21.6%       |
-| 3 espèces | 292          | 2.7%        |
-| 4 espèces | 21           | 0.2%        |
-| 5 espèces | 4            | 0.0%        |
-
-------------------------------------------------------------------------
-
-## Interprétation
-
-**Couverture insuffisante (91.5% \< 95%)**
-
-La méthode standard échoue à atteindre la couverture garantie à cause des **espèces rares** : - Elles ont des scores plus faibles - Le seuil unique ne leur est pas adapté
-
-**Taille des ensembles :** très petite (1.28 en moyenne) car le modèle est très confiant mais parfois trop.
-
-------------------------------------------------------------------------
-
-## Conclusion
-
-La méthode standard ne fonctionne pas parfaitement sur ce jeu de données.\
-**Phase 3 :** Implémentation de la méthode PAS (Ding et al., 2025) pour adapter le seuil aux espèces rares.
-
-------------------------------------------------------------------------
-
-## Structure du dépôt
-
-```         
-Projet_PlantNet_M1_SSD/
-│
-├── README.md
-│
-├── scripts/
-│   ├── non_conformity.py
-│   ├── quantile.py
-│   ├── ensembles_prediction.py
-│   ├── evaluations_finale.py
-│   └── verification.py
-│
-├── results/
-│   ├── non_conformity.csv
-│   ├── seuil.csv
-│   ├── resultats.csv
-│   └── metrics_phase2.csv
-│
-├── rapport/
-│
-├── data/
-│   └── split_random/
-│       ├── calibration.csv
-│       └── test.csv
-│
-├── PlantNet_Convertis/
-├── PlantNet_classification/
-├── fichiers_utilises/
-└── Travail_Firda/
 ```
+├── CP_for_PlantNet/
+│   ├── src/
+│   │   ├── 01a_conversion_json_csv.py
+│   │   ├── 01b_inspect.py
+│   │   ├── 02_splitting_expert_nonexpert.py
+│   │   ├── 03_shuffle_split_50_50.py
+│   │   ├── 04_statistique_descriptive.py
+│   │   ├── 05a_sanity_check_equilibre.py
+│   │   ├── 05b_sanity_check_desequilibre.py
+│   │   ├── 06a_marginale_coverage.py
+│   │   ├── 06b_conditionnelle_coverage.py
+│   │   ├── 06c_macro_coverage.py
+│   │   ├── 07_biais_correction.py
+│   │   └── 08_temperature_scaling.py
+│   ├── data/
+│   │   ├── raw/
+│   │   └── processed/
+│   ├── figures/
+│   │   ├── fig_conditional_naive_alpha005.png
+│   │   ├── fig_histogramme_prevalence.png
+│   │   ├── fig_longue_traine.png
+│   │   ├── fig_macro_naive.png
+│   │   ├── fig_marginale_naive.png
+│   │   ├── fig_sanity_check_desequilibre.png
+│   │   ├── fig_sanity_check_equilibre.png
+│   │   └── fig_temperature_scaling.png
+│   ├── rapport/
+│   │   ├── Images/
+│   │   ├── Rapport.tex
+│   │   └── AGOSSOU-DIAGNE-KARIMOU_Rapport.pdf
+│   ├── presentation/
+│   │   └── soutenance.pptx
+│   ├── .gitignore
+│   ├── requirements.txt
+│   └── README.md
+```
+
+## References
+
+- Angelopoulos, A. N., & Bates, S. (2021). *A gentle introduction to conformal prediction and distribution-free uncertainty quantification*. arXiv:2107.07511.
+- Ding, T., Fermanian, J.-B., & Salmon, J. (2025). *Conformal Prediction for Long-Tailed Classification*. ICLR 2025. Blog: https://josephsalmon.eu/blog/long-tail/
+- Lefort, T., et al. (2024). *Pl@ntNet collaborative learning: South-Western-Europe dataset*. arXiv:2406.03356.
+- Dabah, L., & Tirer, T. (2024). *On Temperature Scaling and Conformal Prediction of Deep Classifiers*.
+- Sadinle, M., Lei, J., & Wasserman, L. (2019). *Least Ambiguous Set-Valued Classifiers with Bounded Error Levels*. JASA.
+- Vovk, V., Gammerman, A., & Shafer, G. (2005). *Algorithmic Learning in a Random World*. Springer.

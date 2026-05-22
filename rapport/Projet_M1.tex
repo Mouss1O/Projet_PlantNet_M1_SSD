@@ -1,0 +1,73 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Paquetages de base ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+% --- Liens et URLs ---
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Projet M1 : Prédiction conformelle Pl@ntNet},
+    pdfpagemode=FullScreen,
+}
+
+% --- Mathématiques ---
+\usepackage{amsmath,amssymb}
+
+% --- Listes ---
+\usepackage{enumitem}
+
+% --- Titre ---
+\title{Projet M1 : Prédiction conformelle et base de données Pl@ntNet-CrowdSWE}
+\author{}
+\date{} % On laisse la date vide comme dans l'original
+
+\begin{document}
+
+\maketitle
+
+\vspace{-2cm} % Réduire l'espace sous le titre
+
+\subsubsection*{Encadrants}
+
+\begin{itemize}[label=\textbullet, noitemsep]
+    \item Joseph Salmon (\href{mailto:joseph.salmon@inria.fr}{joseph.salmon@inria.fr})
+    \item Christophe Botella (\href{mailto:christophe.botella@inria.fr}{christophe.botella@inria.fr})
+    \item Jean-Baptiste Fermanian (\href{mailto:jean-baptiste.fermanian@inria.fr}{jean-baptiste.fermanian@inria.fr})
+\end{itemize}
+
+\section*{Résumé}
+
+Pl@ntNet est un projet de science citoyenne basé sur une application mobile de reconnaissance de plantes à partir d'images comptant environ 20 millions d'utilisateurs dans le monde. L'application permet l'éducation du grand public à la botanique, et génère massivement des observations d'espèces de plantes utilisées par des centaines de chercheurs à travers le monde. L'algorithme de Pl@ntNet peut aujourd'hui identifier plus de 75 000 espèces de plantes, mais peu d'images valides existent pour la plupart d'entre elles. \\
+
+Cependant, la plupart des espèces de plantes de la flore mondiale sont rares ou difficiles à identifier. Ainsi, pour beaucoup d'entre elles, nous manquons d'images d'apprentissage et les confusions sont fréquentes dans les prédictions. \\
+
+Dès lors, un enjeu important est de quantifier correctement l'incertitude sur les prédictions d'identification du modèle. Les algorithmes d'apprentissage profond (\textit{deep learning}) produisent aujourd'hui les meilleures performances pour ce problème de classification hautement multi-classes (une classe = une espèce). Mais ces modèles ne fournissent pas directement une quantification de l'incertitude des prédictions qui permette, par exemple, d'interpréter les scores prédits par le modèle pour chaque espèce comme un risque d'erreur, ou de filtrer les observations en garantissant un taux d'erreur donné. \\
+
+L'approche \textit{conformal prediction} (Angelopoulos et al., 2021) est de plus en plus utilisée pour relever ce défi. Ce projet vise à explorer l'application de cette approche à des images de plantes identifiées par des experts (Lefort et al., 2024) pour transformer les scores prédits par Pl@ntNet en un ensemble d'espèces probables avec une garantie générale sur le taux d'erreur. Une partie importante du travail consistera à établir si le jeu de données de validation, dont la couverture taxonomique est partielle et biaisée, peut répondre aux hypothèses de la \textit{conformal prediction} et s'il faut pour cela des traitements préalables. \\
+
+En particulier, le travail se basera sur la base de données \href{https://zenodo.org/records/10782465}{Pl@ntNet-CrowdSWE}, et une exploration approfondie de celle-ci. On mesurera aussi les performances de la méthode \textbf{PAS} décrite dans Ding et al. (2025) (voir aussi \url{https://josephsalmon.eu/blog/long-tail/}) pour améliorer la couverture des espèces rares, ainsi que l'impact de la température dans le calcul des scores softmax (Dabah et Tirer, 2024) sur les performances. \\
+
+\textbf{Note :} voir \href{https://github.com/lcletz/PLANTNET_M1_SSD}{github.com/lcletz/PLANTNET\_M1\_SSD} pour un sujet similaire l'année dernière.
+
+\section*{Références}
+
+\begin{itemize}[label=\textbullet]
+    \item Angelopoulos, A. N., \& Bates, S. (2021). \textit{A gentle introduction to conformal prediction and distribution-free uncertainty quantification}. arXiv preprint arXiv:2107.07511.
+    
+    \item Lefort, T., et al. (2024). \textit{Pl@ntNet collaborative learning: South-Western-Europe dataset}. \href{https://arxiv.org/abs/2406.03356}{https://arxiv.org/abs/2406.03356}
+    
+    \item Ding, T., Fermanian, J.-B., Salmon, J. (2025). \textit{Conformal Prediction for Long-Tailed Classification}. \href{https://arxiv.org/abs/2507.06867}{https://arxiv.org/abs/2507.06867}
+    
+    \item Dabah, L., \& Tirer, T. (2024). \textit{On Temperature Scaling and Conformal Prediction of Deep Classifiers}.
+\end{itemize}
+
+\end{document}

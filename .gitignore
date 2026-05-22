@@ -1,4 +1,41 @@
-# Ignorer des fichiers spécifiques
-ai_scores_all.csv
-calibration.csv
-test.csv
+# === Données brutes (trop volumineuses pour git) ===
+data/raw/
+*.csv
+!data/processed/.gitkeep
+
+# === Python ===
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+dist/
+build/
+*.so
+.venv/
+venv/
+env/
+
+# === Jupyter ===
+.ipynb_checkpoints/
+*.ipynb_meta
+
+# === IDE ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# === LaTeX ===
+rapport/*.aux
+rapport/*.log
+rapport/*.out
+rapport/*.toc
+rapport/*.synctex.gz
+rapport/*.fls
+rapport/*.fdb_latexmk
+rapport/*.bbl
+rapport/*.blg

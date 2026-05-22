@@ -1,0 +1,1177 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{enumitem}
+\usepackage{comment}
+\usepackage{multirow}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\graphicspath{{images/}}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\setstretch{1.2}
+\usepackage{float}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{caption}
+\usepackage{siunitx}
+\sisetup{output-decimal-marker={.}}
+\usepackage{listings}
+\usepackage{courier}
+\usepackage[nameinlink]{cleveref}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[most]{tcolorbox}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathmorphing, calc, shapes.geometric}
+\setlength{\extrarowheight}{2pt}
+\setlength{\marginparwidth}{2cm}
+\setlength{\headheight}{34.15pt}
+\addtolength{\topmargin}{-22.15pt}
+\definecolor{univ-red}{RGB}{200,16,46}
+\definecolor{vert-fonce}{RGB}{34,85,34}
+\definecolor{vert-moyen}{RGB}{56,118,56}
+\definecolor{vert-clair}{RGB}{120,180,80}
+\definecolor{vert-pale}{RGB}{200,230,180}
+\definecolor{brun-tige}{RGB}{100,70,40}
+\definecolor{borderblue}{RGB}{0,80,180}
+\definecolor{propbg}{RGB}{220,230,241}
+\definecolor{propborder}{RGB}{0,102,204}
+\definecolor{boxblue}{RGB}{0,102,204}
+\definecolor{linkorange}{RGB}{230,92,58}
+\definecolor{citeorange}{RGB}{230,92,58}
+\definecolor{softmaxblue}{RGB}{0,102,204}
+\definecolor{algorithmred}{RGB}{255,51,76}
+\definecolor{lightblue}{RGB}{220,230,241}
+
+\lstset{
+  language=R,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\bfseries\color{blue},
+  commentstyle=\itshape\color{green!50!black},
+  stringstyle=\color{red!70!black},
+  numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt,
+  backgroundcolor=\color{gray!8}, frame=single, breaklines=true
+}
+\titleformat{\section}{\large\bfseries\color{univ-red}}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue,
+  citecolor=black
+}
+
+%% Feuille
+\newcommand{\feuille}[4]{%
+  \begin{scope}[shift={#1}, rotate=#2, scale=#3]
+    \fill[#4, opacity=0.82]
+      (0,0) .. controls (0.3,0.6) and (0.6,1.0) .. (0,1.4)
+            .. controls (-0.6,1.0) and (-0.3,0.6) .. cycle;
+    \draw[vert-fonce!60, line width=0.3pt, opacity=0.55] (0,0) -- (0,1.3);
+    \draw[vert-fonce!40, line width=0.2pt, opacity=0.45]
+      (0,0.3) .. controls (0.25,0.6) .. (0,1.1)
+      (0,0.3) .. controls (-0.25,0.6) .. (0,1.1);
+  \end{scope}
+}
+
+%% Petite fleur
+\newcommand{\petitefleur}[2]{%
+  \begin{scope}[shift={#1}]
+    \foreach \a in {0,72,144,216,288}{
+      \fill[#2!70, opacity=0.65, rotate=\a] (0,0.12) ellipse (0.07 and 0.12);
+    }
+    \fill[yellow!80!white, opacity=0.85] (0,0) circle (0.09);
+  \end{scope}
+}
+
+%% En-tête et pied de page
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{%
+  \raisebox{-0.4\height}{\includegraphics[height=1.2cm]{SSD.jpeg}}%
+  \hspace{0.6cm}%
+  \makebox[0pt][l]{\rule{\textwidth}{0.6pt}}%
+}
+\fancyfoot[C]{\thepage}
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\begin{document}
+
+\begin{titlepage}
+  \thispagestyle{empty}
+
+  \begin{tikzpicture}[remember picture, overlay]
+
+    %% COIN BAS-DROIT : fougère
+    \begin{scope}[shift={(current page.south east)}, xshift=-0.4cm, yshift=0.3cm]
+      \foreach \ang/\len in {80/7.5, 100/8, 110/7, 70/6.5, 95/8.5, 85/7}{
+        \draw[brun-tige!70, line width=0.6pt]
+          (0,0) .. controls ({-\len*sin(\ang)*0.3},{\len*cos(\ang)*0.5})
+                .. ({-\len*sin(\ang)},{\len*cos(\ang)});
+      }
+      \foreach \h/\ang/\s in {%
+        1.5/75/0.7, 2.5/85/0.85, 3.5/92/1.0, 4.5/98/0.95,
+        5.5/103/0.85, 6.5/108/0.7}{
+        \feuille{({-\h*sin(\ang)},{\h*cos(\ang)})}{{\ang-90}}{{\s}}{vert-moyen}
+        \feuille{({-\h*sin(\ang)-0.3},{\h*cos(\ang)+0.1})}{{\ang-90+30}}{{\s*0.7}}{vert-clair}
+        \feuille{({-\h*sin(\ang)+0.2},{\h*cos(\ang)-0.1})}{{\ang-90-25}}{{\s*0.75}}{vert-fonce}
+      }
+    \end{scope}
+
+    %% COIN HAUT-GAUCHE : lierre
+    \begin{scope}[shift={(current page.north west)}, xshift=0.3cm, yshift=0cm]
+      \draw[brun-tige!80, line width=0.9pt]
+        (0,0) .. controls (0.6,-1.0) and (0.2,-2.5) .. (0.9,-3.5);
+      \draw[brun-tige!70, line width=0.7pt]
+        (0.5,-0.3) .. controls (1.8,-0.8) and (2.2,-1.8) .. (2.6,-3.0);
+      \draw[brun-tige!70, line width=0.6pt]
+        (0.2,-0.8) .. controls (-0.4,-1.5) and (0.0,-2.5) .. (0.4,-3.2);
+      \feuille{(0.4,-1.0)}{-130}{0.85}{vert-fonce}
+      \feuille{(0.3,-0.8)}{-100}{0.7}{vert-clair}
+      \feuille{(0.7,-1.9)}{150}{0.9}{vert-moyen}
+      \feuille{(0.6,-2.1)}{-140}{0.75}{vert-fonce}
+      \feuille{(0.8,-3.0)}{130}{0.8}{vert-clair}
+      \feuille{(1.4,-1.2)}{-110}{0.85}{vert-moyen}
+      \feuille{(2.0,-2.0)}{160}{0.8}{vert-clair}
+      \feuille{(2.4,-2.8)}{-125}{0.7}{vert-fonce}
+      \feuille{(0.2,-1.6)}{-170}{0.75}{vert-moyen}
+      \feuille{(0.3,-2.7)}{155}{0.8}{vert-clair}
+    \end{scope}
+
+    %% COIN HAUT-DROIT : branche
+    \begin{scope}[shift={(current page.north east)}, xshift=-0.3cm, yshift=0cm]
+      \draw[brun-tige!80, line width=1.0pt]
+        (0,0) .. controls (-0.9,-1.0) and (-0.4,-2.5) .. (-1.2,-3.8);
+      \draw[brun-tige!70, line width=0.7pt]
+        (-0.5,-0.8) .. controls (-1.8,-1.2) and (-2.2,-2.2) .. (-3.0,-3.2);
+      \draw[brun-tige!65, line width=0.6pt]
+        (-0.2,-1.8) .. controls (0.2,-2.6) and (0.1,-3.2) .. (-0.2,-3.8);
+      \feuille{(-0.6,-1.1)}{-60}{0.9}{vert-fonce}
+      \feuille{(-0.8,-0.9)}{-90}{0.75}{vert-clair}
+      \feuille{(-1.0,-2.2)}{-40}{0.85}{vert-moyen}
+      \feuille{(-0.7,-2.0)}{-110}{0.8}{vert-fonce}
+      \feuille{(-1.2,-3.2)}{-70}{0.9}{vert-clair}
+      \feuille{(-1.7,-1.5)}{-55}{0.85}{vert-moyen}
+      \feuille{(-2.4,-2.4)}{-80}{0.8}{vert-clair}
+      \feuille{(-2.8,-3.0)}{-50}{0.7}{vert-fonce}
+      \petitefleur{(-1.3,-1.4)}{vert-pale}
+      \petitefleur{(-3.0,-3.2)}{white}
+      \petitefleur{(-0.2,-3.7)}{vert-pale}
+    \end{scope}
+
+    %% Petites feuilles bas-centre
+    \begin{scope}[shift={(current page.south)}, yshift=1.8cm]
+      \feuille{(-3.5cm,0)}{72}{0.55}{vert-clair}
+      \feuille{(3.5cm,0)}{-72}{0.55}{vert-clair}
+      \feuille{(-2.0cm,0.1cm)}{88}{0.42}{vert-moyen}
+      \feuille{(2.0cm,0.1cm)}{-88}{0.42}{vert-moyen}
+    \end{scope}
+
+  \end{tikzpicture}
+
+  \centering
+  \vspace*{0.5cm}
+
+  \begin{minipage}[c]{0.55\textwidth}
+    \centering
+    \includegraphics[width=8cm]{u-montpellier.jpg}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}[c]{0.38\textwidth}
+    \centering
+    \includegraphics[width=3.8cm]{logo-plantnet.jpg}
+  \end{minipage}\\[0.5cm]
+
+  {\LARGE \textbf{UNIVERSITÉ DE MONTPELLIER}}\\[0.1cm]
+  {\Large Faculté des Sciences}\\[0.1cm]
+  {\large Master 1 — Statistique et Science des Données}\\[0.7cm]
+
+  {\color{univ-red}\rule{\textwidth}{2pt}}\\[2pt]
+  {\color{univ-red!35}\rule{\textwidth}{0.6pt}}\\[0.55cm]
+
+  {\fontsize{22}{28}\selectfont\textbf{\color{univ-red}
+    Prédiction conformelle et base de données\\[0.25cm]
+    Pl\texttt{@}ntNet-CrowdSWE%
+  }}\\[0.55cm]
+
+  {\color{univ-red!35}\rule{\textwidth}{0.6pt}}\\[2pt]
+  {\color{univ-red}\rule{\textwidth}{2pt}}\\[0.55cm]
+
+  {\color{gray!65}\itshape\large Projet encadré — Année universitaire 2025--2026}\\[0.7cm]
+
+  \begin{tcolorbox}[
+    colback=white,
+    colframe=vert-moyen!55,
+    arc=5pt,
+    boxrule=0.7pt,
+    left=1.0cm, right=1.0cm, top=0.5cm, bottom=0.5cm,
+    width=\textwidth
+  ]
+  \begin{minipage}[t]{0.45\textwidth}
+    \textbf{\color{vert-fonce}Étudiants}\\[0.15cm]
+    \rule{\linewidth}{0.4pt}\\[0.2cm]
+    KARIMOU Firdaousse\\[0.28cm]
+    DIAGNE Moussa\\[0.28cm]
+    AGOSSOU Dossou
+  \end{minipage}%
+  \hfill
+  \begin{minipage}[t]{0.45\textwidth}
+    \textbf{\color{vert-fonce}Encadrant}\\[0.15cm]
+    \rule{\linewidth}{0.4pt}\\[0.2cm]
+    SALMON Joseph\\[0.28cm]
+    \\[0.28cm]
+   
+  \end{minipage}
+  \end{tcolorbox}
+
+  \vspace{0.6cm}
+  {\large Montpellier, le 22 mai 2026}
+
+\end{titlepage}
+
+
+% --- Table des matières ---
+\setstretch{1} % compactage pour tenir sur une page
+\tableofcontents
+\newpage
+\setstretch{1.2}
+
+ 
+% --- Première Partie ---
+
+\section{Introduction}
+Reconnaître automatiquement les plantes est devenu un enjeu important, autant pour la science que pour la société. Cela touche à la fois la botanique, l'écologie et l'intelligence artificielle. Les applications sont nombreuses : aider à protéger la biodiversité, suivre l'état des écosystèmes, ou encore faire découvrir la nature au grand public.\\
+
+C'est dans ce cadre qu'est né le projet Pl@ntNet, une plateforme de science citoyenne parmi les plus importantes au monde. Son application mobile permet d'identifier des plantes à partir de photos et compte environ 20 millions d'utilisateurs. Grâce à cette participation citoyenne, une vaste base de données a été constituée : pour la seule région de l'Europe du Sud-Ouest, elle rassemble près de 6 millions d'observations issues de plus de 700 000 contributeurs, couvrant plus de 75 000 espèces de plantes. Ces données sont essentielles pour entraîner et améliorer les modèles de reconnaissance.\\
+
+Ces modèles sont aujourd'hui capables d'identifier plusieurs espèces grâce à des algorithmes très performants. Cependant, cela se heurte à une réalité botanique difficile : la plupart des espèces sont rares, se ressemblent beaucoup, ou sont difficiles à distinguer sans expert. Pour beaucoup d'entre elles, il n'y a pas assez de photos pour bien entraîner le modèle, et les erreurs sont donc fréquentes.\\
+
+Ce problème pose une question fondamentale : celle de la confiance que l'on peut accorder aux résultats. Pour chaque photo, le modèle attribue une note de confiance à chaque espèce. Ces notes sont souvent interprétées comme des probabilités, mais elles ne mesurent pas bien l'incertitude réelle. Ainsi, on ne peut pas garantir un taux d'erreur, ni écarter les prédictions douteuses, ni adapter la réponse au niveau de confiance souhaité.\\
+
+Mieux quantifier et maîtriser ce doute devient donc essentiel. L’approche \textit{conformal prediction} (Angelopoulos et al., 2021) est de plus en plus utilisée pour relever ce défi. Ce projet vise à explorer l’application de cette approche à des images de plantes identifiées par des experts (Lefort et al., 2024) pour transformer les scores prédits par Pl@ntNet en un ensemble d’espèces probables avec une garantie générale sur le taux d’erreur. Une partie importante du travail consistera à établir si le jeu de données de validation, dont la couverture taxonomique est partielle et biaisée, peut répondre aux hypothèses de la \textit{conformal prediction} et s’il faut pour cela des traitements préalables.\\
+
+
+
+
+
+
+\newpage
+\section{Fondements théoriques de la \textit{conformal prediction}}
+
+Face aux limites des prédictions ponctuelles dans les contextes incertains, la \textit{conformal prediction} (CP) permet de construire des ensembles d'étiquettes garantissant statistiquement l'inclusion de la réponse exacte (Vovk et al., 2005, 2016). Dans ce cadre, une procédure est qualifiée d'optimale si elle génère les plus petits ensembles satisfaisant une contrainte de couverture prédéfinie (Sadinle et al., 2019).
+
+Le choix de la notion de couverture influe drastiquement sur la morphologie des ensembles obtenus. Si Sadinle et al. (2019) ont établi les solutions optimales pour les couvertures marginales et conditionnelles par classe, ce travail s'inscrit dans le prolongement de ces recherches en introduisant la macro-couverture. Comme nous le démontrerons, cette approche s'avère plus robuste et équitable pour traiter les problématiques de classification à longue traîne.\\
+
+Voici un aperçu des trois notions de couverture que nous abordons ci-dessous :
+
+\textbf{Couverture marginale} : Garantit une couverture sur tous les points de données, assurant que la véritable étiquette est incluse avec la probabilité souhaitée en moyenne sur l’ensemble de données, mais peut négliger les classes rares ou sous-représentées.
+
+\textbf{Couverture conditionnelle par classe} : Garantit la couverture au sein de chaque classe séparément, garantissant la probabilité d’inclusion souhaitée pour chaque classe, mais produisant souvent des ensembles de taille irréalisable pour les classes présentant une forte incertitude ou peu d’échantillons.
+
+\textbf{Couverture macro} : Équilibre la couverture de manière égale entre les classes, en faisant la moyenne des couvertures par classe afin de souligner l’équité entre les classes communes et rares.
+
+
+
+
+
+\subsection{Notation et modèle}
+
+Soit $(X, Y) \in \mathcal{X} \times \mathcal{Y}$ une paire (caractéristique, étiquette). Dans notre exemple, $X$ est une image et $Y$ est l’étiquette réelle (espèce) qui lui est associée. Soit $\hat{p}(y \mid x)$ une estimation de la probabilité $p(y \mid x)$ que l’étiquette soit $y$ étant donné les caractéristiques $x$. Soit $\alpha \in [0,1]$ une probabilité de non-couverture spécifiée par l’utilisateur, de sorte que $1 - \alpha$ correspond au niveau de couverture souhaité.
+
+Les données disponibles sont divisées aléatoirement en quatre ensembles distincts : un ensemble d’entraînement pour ajuster le modèle $\hat{p}(y \mid x)$, un ensemble de validation pour le réglage des hyperparamètres (dans nos expériences, le seul hyperparamètre est le nombre d’époques d’entraînement), un ensemble de calibration $(X_i, Y_i) \in \mathcal{X} \times \mathcal{Y}$ pour $i \in \mathbb{N}$ afin d’évaluer la couverture, et un ensemble de test pour l’évaluation finale. 
+
+Notons que pour que les garanties de couverture de la \textit{conformal prediction} soient valides, l’ensemble de calibration doit être échangeable avec l’ensemble de test. La procédure de division aléatoire garantit que cette condition est satisfaite.
+
+
+
+
+
+\subsection{Couverture marginale}
+
+En classification, supposons que notre objectif est de contrôler la taille (ici, la \textbf{cardinalité}) de nos ensembles de prédiction tout en garantissant une \textbf{couverture marginale}. Cela correspond au problème d'optimisation suivant :
+\begin{equation}
+    \begin{aligned}
+        \min_{\mathcal{C}: \mathcal{X} \mapsto 2^{\mathcal{Y}}} \quad & \mathbb{E}[|\mathcal{C}(X)|] \\
+        \text{s.t.} \quad & \mathbb{P}(Y \in \mathcal{C}(X)) \geq 1 - \alpha,
+    \end{aligned}
+\end{equation}
+
+Le résultat suivant, dû à Sadinle, Lei, et Wasserman (2019), décrit l'ensemble optimal.
+
+\begin{tcolorbox}[
+      enhanced,
+    colback=propbg,
+    colframe=propbg,
+    boxrule=0pt,
+    leftrule=4pt,
+    borderline west={4pt}{0pt}{propborder},
+    arc=2pt,
+    left=2mm, right=2mm, top=2mm, bottom=2mm
+]
+\textbf{Proposition 1 (Couverture marginale et ensemble de prédiction)} En supposant que $p(Y|X)$ n'ait pas de masse ponctuelle à son $\alpha$-quantile, noté $t_{\alpha}^*$, la solution de ({\color{linkorange}1}) est donnée par
+\[
+\mathcal{C}^*(x) = \{y \in \mathcal{Y} : p(y|x) \ge t_{\alpha}^*\}.
+\]
+\end{tcolorbox}
+
+\textbf{Interprétation :} Ce résultat implique que les plus petits ensembles qui atteignent une couverture marginale sont créés en incluant les classes ayant la plus forte probabilité d'être la classe correcte. Plus précisément, nous incluons toutes les étiquettes \( y \) pour lesquelles \( p(y|x) \) dépasse un certain seuil \( t^*_{\alpha} \), choisi pour garantir le niveau de couverture souhaité de \( 1 - \alpha \).
+
+\textbf{En pratique :}
+Alors que nous n'avons pas d'accès direct à \( p(y|x) \), nous pouvons utiliser une estimation \( \hat{p}(y|x) \) pour approximer l'ensemble de prédiction optimal pour un seuil \( t_{\alpha} \) choisi :
+
+\[
+\hat{\mathcal{C}}(X) = \{ y \in \mathcal{Y} : \hat{p}(y|X) \geq t_{\alpha} \}.
+\]
+
+Pour garantir une couverture marginale de \( 1 - \alpha \), nous sélectionnons \( t_{\alpha} \) en réécrivant \( \hat{\mathcal{C}}(x) \) en termes d'un \textit{score} conforme :
+
+\[
+\hat{\mathcal{C}}(x) = \{ y \in \mathcal{Y} : s(x, y) \leq -t_{\alpha} \},
+\]
+
+où le \textbf{score} est défini comme
+
+\[
+s(x, y) = -\hat{p}(y|x).
+\]
+
+En fixant \( -t_{\alpha} \) comme le quantile de niveau \( (1 - \alpha)(1 + \frac{1}{n}) \) des scores de calibration \( s(X_i, Y_i) \) pour \( i = 1, \ldots, n \), c'est-à-dire, \( \hat{q} = \lfloor (n + 1)(1 - \alpha) \rfloor \)-ème plus grande valeur dans \( \{ s(X_1, Y_1), \ldots, s(X_n, Y_n) \} \), l'ensemble de prédiction conforme \( \hat{\mathcal{C}} \) atteint une \textbf{garantie de couverture marginale} (Vovk, Gammerman, et Shafer 2005), c'est-à-dire,
+
+\[
+\mathbb{P}(Y \in \hat{\mathcal{C}}(X)) \geq 1 - \alpha.
+\]
+
+
+\noindent Nous appellerons la procédure ci-dessus Prédiction Conforme Standard (\textbf{Standard CP}) avec la fonction de score \textbf{softmax} (ainsi nommée car le $\hat{p}$ qui apparaît dans $s(x,y) = -\hat{p}(y|x)$ est fréquemment obtenu à partir d'un vecteur softmax). Notez que d'autres scores ont également été envisagés dans la littérature, voir par exemple Romano, Sesia, et Candès ({\color{linkorange}2020}).\\
+
+\noindent Nous généralisons cette procédure pour générer des ensembles de prédiction dans l'{\color{linkorange}Algorithme 1}. La CP Standard est un cas particulier où la fonction de seuil $\hat{\mathbf{q}} = (\hat{q}, \dots, \hat{q}) \in \mathbb{R}^{|\mathcal{Y}|}$ applique le même seuil à toutes les classes. Cependant, les autres procédures conformes que nous présentons ci-dessous, comme la \textbf{Classwise CP}, imposent des seuils différents pour chaque classe.\\
+
+\noindent
+\rule{\textwidth}{1pt}
+\textbf{Algorithme 1} Méta-algorithme de prédiction conforme \\
+\rule{\textwidth}{0.5pt}
+\textbf{Require:} Fonction de score $s : \mathcal{X} \times \mathcal{Y} \to \mathbb{R}$, niveau de non-couverture $\alpha \in [0, 1]$, ensemble de calibration $\mathcal{D}_{\text{cal}} = \{(X_i, Y_i)\}_{i=1}^n$, point de test $X_{n+1}$, fonction de seuil $\hat{\mathbf{q}} : \mathbb{R}^n \times [0, 1] \to \mathbb{R}^{|\mathcal{Y}|}$
+
+\begin{enumerate}[label=\arabic*:, itemsep=0pt]
+\item Calculer les scores : $S_i \leftarrow s(X_i, Y_i)$ pour $i = 1, \dots, n$
+\item Calculer les seuils : $\mathbf{q} \leftarrow \hat{\mathbf{q}}((S_i)_{i=1}^n, \alpha)$
+\item \textbf{return} Ensemble de prédiction $\mathcal{C}(X_{n+1}) = \{y : s(X_{n+1}, y) \le q_y\}$
+\end{enumerate}
+
+\rule{\textwidth}{1pt}
+\vspace{1em}
+
+\noindent Actuellement (en date d'octobre 2025), la CP Standard avec softmax est plus ou moins la stratégie utilisée pour générer des ensembles de prédiction dans l'application Pl@ntNet. Cela donne des résultats raisonnables, mais pouvons-nous faire mieux ?
+
+
+
+
+
+\subsection{Couverture conditionnelle}
+
+\noindent Une préoccupation avec l'approche standard de prédiction conforme est que toutes les classes sont traitées de manière similaire. Si certaines classes rares se comportent différemment de la majorité, elles peuvent ne jamais apparaître dans l'ensemble de prédiction. Par exemple, le classifieur peut systématiquement assigner de faibles probabilités aux classes rares, car celles-ci ne sont pas suffisamment représentées pendant l'entraînement et alors, elles ne dépassent jamais le seuil.\\
+
+\noindent Pour cette raison, il est logique de contrôler la couverture conditionnelle pour toutes les classes $y \in \mathcal{Y}$, tout en ciblant des ensembles de taille minimale. La formulation de l'optimisation devient alors :
+
+\begin{equation}
+\begin{aligned}
+& \min_{\mathcal{C}: \mathcal{X} \mapsto 2^{\mathcal{Y}}} \mathbb{E}[|\mathcal{C}(X)|] \cdot \\
+\text{s.t. } & \mathbb{P} (y \in \mathcal{C}(X) \mid Y = y) \ge 1 - \alpha, \forall y \in \mathcal{Y}
+\end{aligned}
+\end{equation}
+
+\noindent Sadinle, Lei, et Wasserman ({\color{linkorange}2019}) ont montré que la solution optimale pour un tel ensemble :\\
+
+\begin{tcolorbox}[
+     enhanced,
+    colback=propbg,
+    colframe=propbg,
+    boxrule=0pt,
+    leftrule=4pt,
+    borderline west={4pt}{0pt}{propborder},
+    arc=2pt,
+    left=2mm, right=2mm, top=2mm, bottom=2mm
+]
+\textbf{Proposition 2 (Couverture conditionnelle et ensemble de prédiction)} Les solutions de ({\color{linkorange}Équation 2}) peuvent s'écrire
+\[
+\mathcal{C}^*(x) = \{y \in \mathcal{Y} : p(y|x) \ge t_{\alpha,y}\},
+\]
+où le seuil $t_{\alpha,y}$ est fixé comme le $\alpha$-quantile de la distribution conditionnelle $p(Y|X)$ sachant $Y = y$, \textit{i.e,} $\mathbb{P}(p(Y|X) \ge t_{\alpha,y} | Y = y) = 1 - \alpha$.
+\end{tcolorbox}
+
+
+\noindent 
+\textbf{Interprétation} : la manière optimale d'obtenir une couverture conditionnelle est de sélectionner les labels dont la probabilité est supérieure à un seuil particulier $t_{\alpha,y}$, où maintenant le seuil $t_{\alpha,y}$ peut être adapté par classe, et est fixé comme le $\alpha$-quantile de la distribution conditionnelle $p(Y|X)$ sachant $Y = y$, \textit{i.e,} $\mathbb{P}(p(Y|X) \ge t_{\alpha,y} | Y = y) = 1 - \alpha$.\\
+
+\noindent \textbf{En pratique :} le seuil de chaque classe $y$ est maintenant calculé comme le quantile des scores sur la classe $y$. Ceci est connu sous le nom de \textbf{conformal prediction de Mondrian} ({\color{citeorange}Vovk, Gammerman, and Shafer 2005}). Formellement, pour toute classe $y \in \mathcal{Y}$, nous fixons $t_{\alpha,y}$ comme le $(n_y + 1)(1 - \alpha)$-ième score des points de calibration sur la classe $y$, où $n_y$ est le nombre de ces points. Cela correspond à l'application de l'{\color{citeorange}Algorithme 1} avec la fonction de seuil $\mathbf{\hat{q}}$ égale au vecteur de ces quantiles conditionnels. Nous appelons cette méthode \textbf{la prédiction conforme conditionnelle.}\\
+
+\noindent Pour les classes dont le nombre de points de calibration $n_y$ n'est pas assez grand (i.e., $n_y < \alpha^{-1}$), ce seuil est fixé comme la valeur maximale possible de la fonction de score, ou formellement à $+\infty$. Cela implique que \textbf{ces classes rares seront toujours incluses} dans les ensembles de prédiction. Cela peut être observé ci-dessous dans les graphiques pour $\alpha$ suffisamment petit.
+
+
+
+
+
+\subsection{Couverture Macro}
+
+\noindent La prédiction conforme standard sous-couvre souvent les classes rares, bien qu'elle produise des ensembles de prédiction compacts. À l'autre extrémité du spectre, la prédiction conforme conditionnelle assure une couverture égale pour toutes les classes, mais au prix d'ensembles encombrants et surdimensionnés. Et si nous pouvions trouver un juste milieu ?\\
+
+\noindent C'est ce que nous abordons en introduisant une contrainte de macro-couverture, inspirée par la métrique de macro-précision dans la classification multi-classes. Notre objectif est de minimiser la taille attendue des ensembles de prédiction tout en garantissant que toutes les classes (y compris celles disposant de données limitées) bénéficient d'une couverture équitable et fiable.\\
+
+\noindent La formulation de la macro-couverture se lit comme suit :
+
+\begin{equation}
+\begin{aligned}
+\min_{\mathcal{C}: \mathcal{X} \mapsto 2^{\mathcal{Y}}} \mathbb{E}[|\mathcal{C}(X)|] \\
+\text{s.t. MacroCov}(\mathcal{C}) \geq 1 - \alpha,
+\end{aligned}
+\end{equation}
+
+\noindent où nous avons défini la macro-couverture comme
+
+\begin{equation}
+\text{MacroCov}(\mathcal{C}) = \frac{1}{|\mathcal{Y}|} \sum_{y \in \mathcal{Y}} \mathbb{P}(Y \in \mathcal{C}(X) \mid Y = y).
+\end{equation}
+
+
+\noindent La motivation de ce programme est de traiter toutes les classes de manière égale. Nous proposons une adaptation de la proposition précédente pour ces nouvelles contraintes :
+
+\begin{tcolorbox}[
+    enhanced,
+    colback=propbg,
+    colframe=propbg,
+    boxrule=0pt,
+    leftrule=4pt,
+    borderline west={4pt}{0pt}{propborder},
+    arc=2pt,
+    left=2mm, right=2mm, top=2mm, bottom=2mm
+]
+\textbf{Proposition 3 (Macro-couverture et ensemble de prédiction)} Les solutions de ({\color{linkorange}Équation 3}) sont données par
+\[
+\mathcal{C}^*(x) = \left\{ y \in \mathcal{Y} : \frac{p(y|x)}{p(y)} \geq t \right\},
+\]
+pour un certain seuil $t$ qui dépend de $\alpha$.
+\end{tcolorbox}
+
+
+\noindent Bien que nous n'ayons pas accès à $p(y|x)$ et $p(y)$ en pratique, nous disposons d'estimations $\hat{p}(y|x)$ et $\hat{p}(y)$ provenant respectivement de notre classifieur et de la distribution des étiquettes d'entraînement empiriques. En créant des ensembles de prédiction sous la forme $\widehat{\mathcal{C}}_{\text{PAS}}(X) = \{ y \in \mathcal{Y} : \hat{p}(y|X)/\hat{p}(y) \geq t \}$ pour un seuil $t$. Nous choisissons $t$ pour obtenir une couverture marginale de $1 - \alpha$ de la manière suivante : remarquez que $\widehat{\mathcal{C}}$ peut être réécrit sous la forme $\widehat{\mathcal{C}}(x) = \{ y \in \mathcal{Y} : s_{\text{PAS}}(x, y) \leq -t \}$, où
+\[
+s_{\text{PAS}}(x, y) = -\frac{\hat{p}(y|x)}{\hat{p}(y)},
+\]
+et \textbf{PAS} signifie \textbf{prevalence-adjusted softmax} (softmax ajusté par la prévalence).
+
+\noindent En résumé, la méthode que nous proposons consiste simplement à exécuter l'{\color{citeorange}Algorithme 1} avec la fonction de score \textbf{PAS} (que nous appellerons Standard avec \textbf{PAS}) et $\hat{\mathbf{q}} = (\hat{q}, \dots, \hat{q})$ comme vecteur de quantile des scores, où $\hat{q}$ est la $\lceil (n + 1)(1 - \alpha) \rceil$-ième plus grande valeur dans $\{s_{\text{PAS}}(X_1, Y_1), \dots, s_{\text{PAS}}(X_n, Y_n)\}$. Ceci correspond à l'exécution de la CP Standard avec le nouveau score $s_{\text{PAS}}$. Notez que pour des \textbf{comparaisons équitables} avec la CP Standard, nous fixons le seuil dans Standard avec PAS pour obtenir une couverture marginale $1 - \alpha$, c'est-à-dire que nous fixons $t$ de sorte que $\mathbb{P}(Y \in \widehat{\mathcal{C}}_{\text{PAS}}(X)) = 1 - \alpha$. \\
+
+\noindent Ensuite, cela permet d'obtenir la garantie de couverture marginale souhaitée tout en arbitrant de manière (approximativement) optimale entre la taille de l'ensemble et la macro-couverture. 
+
+
+
+
+\section{Description des données et prétraitements}
+
+\subsection{Le dataset Pl@ntNet-CrowdSWE}
+
+\subsubsection{Application Pl@ntNet}
+
+\textbf{Pl@ntNet} est une plateforme de sciences participatives lancée en 2009 par un consortium regroupant l'INRIA (Institut National de Recherche Informatique et Automatique), le CIRAD (Centre de Coopération International en Recherche Agronomique) et l'IRD (Institut de Recherche pour le Développement). Avec plus de 20 millions d'utilisateurs en 2024, elle permet l'identification botanique par intelligence artificielle et la cartographie de la biodiversité mondiale à partir de clichés d'organes végétaux (feuilles, fleurs, fruits, écorces).
+
+Le système repose sur un principe d'apprentissage collaboratif et itératif : les photographies (\og observations \fg{}) soumises par les utilisateurs sont révisées par la communauté. Cette expertise humaine permet d'enrichir la base de données et de perfectionner continuellement les modèles de reconnaissance de l'IA.
+
+Lors d'une identification, l'algorithme génère une liste de candidats triés par probabilité décroissante, actuellement limitée par un seuil de troncature de $0{,}001$ ($0{,}1\%$). L'enjeu de ce projet est d'optimiser ce mécanisme en rendant le nombre de suggestions adaptatif à l'ambiguïté de l'image, afin de garantir la présence de la bonne espèce dans l'ensemble prédit. L'historique complet de ces interactions (prédictions et validations) constitue le jeu de données central de notre étude.
+
+
+
+
+\subsubsection{Présentation du jeu de données}
+\label{subsec:jeu_donnees}
+
+Notre étude s’est appuyée sur plusieurs jeux de données extraits de Pl@ntNet. Ces extractions de la base, normalement non accessible au public et organisée de manière relativement complexe, ont été rendues accessibles principalement à des fins de recherche. Elles présentent plus clairement et intuitivement chacune des caractéristiques spécifiques en termes de taille, de structure et de variables, qui comprennent en sus les annotations des utilisateurs.\\
+
+\newpage
+
+Le tableau ci-dessous résume les principales caractéristiques de ce jeu de données :
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Caractéristique} & \textbf{Valeur} \\
+\hline
+Zone géographique & Europe du Sud-Ouest \\
+Nombre d'observations & 5 561 512 \\
+Nombre d'observations expertes & 21 624 \\
+Nombre d'utilisateurs & 765 981 \\
+Nombre d'utilisateurs experts & 98 \\
+Nombre d'espèces observées & 9 132 \\
+Période couverte & 2017 -- 2023 \\
+\hline
+\end{tabular}
+\caption{Caractéristiques principales du jeu de données Pl@ntNet-CrowdSWE}
+\end{table}
+
+Ces données sont réparties dans 7 fichiers au format JSON (JavaScript Object Notation) 
+et 2 fichiers textes disponibles sur la \href{https://zenodo.org/records/17913995}{plateforme Zenodo}, 
+un centre de données du CERN (Centre Européen de Recherche Nucléaire) ouvert à tous.
+
+Nous avons ensuite travaillé avec un échantillon plus restreint de \num{21624} observations validées par des experts afin de faciliter le développement et les tests de nos algorithmes. Cette approche nous a permis d'itérer efficacement sur nos modèles avant de les généraliser, dans un dernier temps, sur l'intégralité du jeu de données.\\
+
+À partir de ces données, notre première tâche a consisté à croiser les différents tableaux pour créer un jeu de données unifié contenant toutes les informations nécessaires pour chaque observation validée par les experts. Pour cette fusion, nous avons privilégié le croisement basé sur les identifiants numériques des espèces plutôt que par le nom scientifique dans un but de gain de temps de traitement. Nous avons réalisé ces croisements à l'aide de plusieurs outils.
+
+
+
+\subsubsection{Environnement de développement et outils}
+
+L’intégralité du projet a été développée en \textbf{Python} au sein de l’environnement de développement intégré (IDE) \textbf{Positron}. Pour pallier les contraintes de mémoire vive liées à la volumétrie des données ($81{,}8$ millions de lignes), nous avons implémenté des stratégies de lecture par \textit{chunks}. \textbf{Par souci de reproductibilité, l'ensemble des scripts et des prétraitements est disponible en libre accès sur nos dépôts \href{https://github.com/Mouss1O/Projet_PlantNet_M1_SSD}{GitHub} et \href{https://codeberg.org/jsalmon/CP_for_PlantNet}{Codeberg}.} 
+
+Les bibliothèques suivantes ont été mobilisées pour répondre aux besoins spécifiques de chaque phase :
+\begin{itemize}[nosep] % [nosep] réduit l'espace vertical pour gagner de la place
+    \item \textbf{Traitement de données :} \texttt{Pandas} pour la manipulation tabulaire et les fusions complexes, \texttt{NumPy} pour les calculs vectorisés et l'estimation des quantiles.
+    \item \textbf{Modélisation :} \texttt{Scikit-learn} pour l'implémentation de la régression logistique multinomiale, la génération de données synthétiques (\texttt{make\_blobs}) et le partitionnement des données.
+    \item \textbf{Analyse descriptive et visualisation :} \texttt{Matplotlib} et \texttt{Seaborn} pour la réalisation des graphiques de prévalence, des histogrammes de couverture et des analyses de sensibilité.
+    \item \textbf{Gestion des fichiers :} \texttt{ijson} pour le parsing efficace des fichiers JSON massifs et \texttt{OS} pour la gestion des chemins système.
+\end{itemize}
+ 
+
+
+
+\subsection{Statistique descriptive}
+
+Le jeu de données utilisé dans ce travail est extrait de la base Pl@ntNet et repose
+sur des observations validées par des experts botaniques. Sur un total de
+5\,561\,512 observations disponibles, seules 21\,624 disposent d'une validation
+experte, soit \textbf{0,4\%} de l'ensemble des données. Ces observations couvrent
+\textbf{3\,082 espèces végétales} distinctes.
+
+
+
+
+\subsubsection{Distribution de la longue traine}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{fig_longue_traine.png}
+    \caption{Distribution Long-Tail} 
+    
+    \label{fig:longue_traine}
+\end{figure}
+
+La Figure~\ref{fig:longue_traine} représente la distribution de la prévalence
+des espèces, c'est-à-dire le nombre d'observations disponibles par espèce, classées
+par ordre décroissant, La ligne rouge en pointillés indique le seuil de rareté fixé à $n = 10$ observations. Cette distribution suit une loi de puissance, caractéristique
+d'une structure dite de longue traîne : un petit nombre d'espèces concentre
+la majorité des observations, tandis qu'une grande majorité d'espèces ne dispose
+que de très peu de données.
+
+
+
+
+\subsubsection{Déséquilibre des classes}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|lr|}
+        \hline
+        \textbf{Statistique} & \textbf{Valeur} \\
+        \hline
+        Observations expertes totales   & 21\,624 \\
+        Espèces uniques                 & 3\,082 \\
+        Moyenne obs/espèce              & 7,0 \\
+        Médiane obs/espèce              & 3 \\
+        Maximum obs/espèce              & 108 \\
+        Espèces rares ($< 10$ obs)      & 2\,464 (79,9\%) \\
+        Espèces communes ($\geq 10$ obs)& 618 (20,1\%) \\
+        Espèces avec 1 seule obs        & 975 (31,6\%) \\
+        \hline
+    \end{tabular}
+    \caption{Statistiques descriptives de la prévalence des espèces}
+    \label{tab:prevalence}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig_histogramme_prevalence.png}
+    \caption{Histogramme de la prévalence des espèces.}
+    \label{fig:histogramme}
+\end{figure}
+
+Les statistiques du Tableau 2 et les histogrammes de la Figure 2 confirment un fort déséquilibre entre espèces : la moyenne de 7 observations par espèce occulte une médiane de seulement 3. La concentration des données dans les faibles effectifs est flagrante, la Figure 2 (droite) montrant que la majorité des classes se situent sous le seuil de rareté ($n=10$).
+
+
+Ce déséquilibre impacte directement la fiabilité des garanties de couverture. Avec 79,9\% d'espèces possédant moins de 10 observations (dont 31,6\% d'espèces orphelines), la taille du jeu de calibration devient critique pour éviter des ensembles de prédiction peu fiables. Cette contrainte motive notre choix d'un partitionnement équilibré (50/50), permettant de maximiser l'échantillon de calibration tout en préservant un jeu de test représentatif.
+
+
+
+ 
+\section{Validation sur données synthétiques}
+ 
+Avant d'analyser les données validées par les experts, nous effectuons un sanity check sur des données contrôlées afin d'isoler les sources d'erreur. L'atteinte de la couverture cible dans ce cadre simplifié valide l'implémentation algorithmique.
+
+
+
+\subsection{Cadre équilibré}
+
+Ce premier test valide notre pipeline sur un mélange de 10 gaussiennes circulaires ($N=10\,000, K=10, \sigma=1{,}2$) à prévalence uniforme ($\hat{p}(y) = 0,10$). En appliquant un partitionnement 50/50 (Train / Calibration \& Test), nous vérifions que les méthodes \textbf{Standard CP} et \textbf{PAS CP} ($\alpha = 0{,}05$) respectent les garanties théoriques sous des hypothèses idéales avant d'introduire la complexité du déséquilibre.
+
+
+\subsubsection{Résultats et analyse comparative}
+Les performances obtenues sont résumées dans le Tableau \ref{tab:sanity_balanced} et illustrées par la Figure \ref{fig:sanity_balanced_triple}.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Métrique} & \textbf{Standard CP} & \textbf{PAS CP} \\
+\hline
+Seuil calculé ($\hat{q}$) & -0,1255 & -1,2551 \\
+Couverture Marginale & 0,9464 & 0,9464 \\
+Couverture Macro & 0,9464 & 0,9464 \\
+Taille moyenne des ensembles & 1,93 & 1,93 \\
+\hline
+\end{tabular}
+\caption{Résultats du Sanity Check en cadre équilibré.}
+\label{tab:sanity_balanced}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig_sanity_balanced_triple.png}
+    \caption{Sanity Check Équilibré}
+    \label{fig:sanity_balanced_triple}
+\end{figure}
+
+La figure 3 nous montre la distribution spatiale des 10 classes et leurs centres (Gauche), la couverture par classe montrant une stabilité autour de la cible de 95\% (Centre) et l'histogramme des tailles d'ensembles (Droite).
+
+
+
+\subsubsection{Interprétation des résultats}
+
+L'analyse de ce cadre équilibré valide l'implémentation à travers trois constats majeurs:
+
+Premièrement, la \textbf{précision de la garantie} (couverture de 0,9464 pour une cible de 0,95) confirme la justesse algorithmique du calcul du quantile fini. 
+
+Deuxièmement, la \textbf{convergence des méthodes} est totale : en prévalence uniforme ($1/K=0,1$), les méthodes PAS CP et Standard CP produisent des résultats identiques, le seuil $\hat{q}_{PAS}$ étant exactement égal à $10 \times \hat{q}_{std}$ par simple homothétie.
+
+Enfin, la \textbf{cardinalité moyenne} de 1,93 témoigne d'une efficacité prédictive cohérente avec le recouvrement spatial des classes visible en 2D. Ce succès constitue le socle de notre étude : tout écart futur sur les données Pl@ntNet sera imputable à la structure du dataset (longue traîne, biais) et non à une défaillance logicielle.
+
+
+
+
+\subsection{Cadre déséquilibré}
+
+Ce test simule la problématique centrale du projet en générant un mélange de 10 gaussiennes asymétriques : 5 classes \og communes \fg{} ($1\,500$ observations par classe) et 5 classes \og rares \fg{} ($50$ observations par classe). Afin d'extraire des probabilités $\hat{p}(y|x)$ optimales, les données sont standardisées (\texttt{StandardScaler}) et la régression logistique multinomiale est entraînée sur $1\,000$ itérations pour garantir une convergence parfaite. Ce cadre contrôlé permet de démontrer comment l'ajustement par la prévalence corrige la sous-couverture chronique des classes minoritaires inhérente à la méthode standard.
+
+
+
+
+\subsubsection{Résultats}
+Les résultats obtenus pour un risque cible $\alpha = 0,05$ sont résumés dans le Tableau \ref{tab:sanity_imbalanced}.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Métrique} & \textbf{Standard CP} & \textbf{PAS CP} \\
+\hline
+Seuil calculé ($\hat{q}$) & -0,2130 & -1,2280 \\
+Couverture Marginale & 0,9415 & 0,9432 \\
+Couverture Macro & 0,8151 & 0,9707 \\
+Taille Moyenne des Ensembles & 1,41 & 1,61 \\
+\hline
+\end{tabular}
+\caption{Résultats comparatifs sur dataset synthétique déséquilibré.}
+\label{tab:sanity_imbalanced}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig_sanity_imbalanced_triple.png}
+    \caption{\textbf{Sanity Check Déséquilibré}}
+    \label{fig:sanity_imbalanced_triple}
+\end{figure}
+
+
+\subsubsection{Analyse et interprétation }
+
+L'analyse de la Figure \ref{fig:sanity_imbalanced_triple} démontre l'incapacité de la méthode standard à gérer l'asymétrie de la distribution : si la couverture marginale globale reste satisfaisante (0,9415), la \textbf{couverture macro s'effondre à 0,8151}. Ce décrochage illustre le sacrifice systématique des classes minoritaires au profit des classes majoritaires lors de l'estimation d'un quantile global unique. 
+
+À l'inverse, la méthode \textbf{PAS CP rétablit l'équité statistique} en ramenant la couverture de chaque classe rare au niveau de la cible, atteignant une couverture macro de \textbf{0,9707}. Ce gain massif en fiabilité n'altère pas l'efficience pratique du système : l'augmentation de la \textbf{cardinalité moyenne} est marginale (1,61 contre 1,41) et la distribution des tailles (Panel 3) confirme que la majorité des prédictions ne contiennent qu'un ou deux labels.
+
+Cette preuve de concept valide la méthode PAS CP comme l'outil optimal pour traiter les 79,9\% d'espèces rares identifiées dans le catalogue Pl@ntNet, conciliant rigueur mathématique et utilité applicative.
+
+
+
+
+
+\section{Résultats sur les données validées par des experts }
+
+\subsection{Protocole d'évaluation et impact de la troncature}
+
+Afin de répondre précisément aux enjeux de la \og longue traîne \fg{} identifiés par \cite{Ding2025}, nous dédions cette phase expérimentale à l'analyse comparative de trois approches : \textbf{la conformal prediction standard} (Standard CP), \textbf{l'ajustement par la prévalence} (PAS CP) et \textbf{la méthode par classe} (Classwise CP). Pour évaluer la robustesse et l'équité de ces méthodes, nous mesurons systématiquement leurs performances à travers trois prismes de couverture (marginale, conditionnelle et macro) ainsi que la cardinalité moyenne des ensembles produits.
+
+La mise en œuvre de ce protocole repose sur le croisement des étiquettes validées par des experts avec le fichier de score de l'IA, \texttt{ai\_scores\_all.csv}. Bien que notre partitionnement initial prévoie $n = 10\,812$ observations par échantillon, la structure tronquée du fichier de scores (seuil minimal de $0{,}001$) induit une perte d'information dès lors que l'IA ne parvient pas à classer la bonne espèce parmi ses premiers choix. Le Tableau \ref{tab:bilan_fusion} synthétise la volumétrie réelle traitée après fusion.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Jeu de données} & \textbf{Observations cibles} & \textbf{Lignes extraites} & \textbf{Différence (tronquées)} \\
+\hline
+Calibration & 10 812 & 10 402 & 410 (3,8\%) \\
+Test        & 10 812 & 10 434 & 378 (3,5\%) \\
+\hline
+\end{tabular}
+\caption{Bilan de la fusion entre les étiquettes expertes et les scores IA.}
+\label{tab:bilan_fusion}
+\end{table}
+
+L'interprétation de l'approche dite naïve est directement conditionnée par l'exclusion de ces observations de calibration les plus critiques. En omettant les échecs d'identification les plus sévères de l'IA, nous introduisons un biais de sélection qui tronque artificiellement la distribution empirique des scores. Le quantile $\hat{q}$ résultant devient structurellement trop bas (trop optimiste) pour assurer la couverture cible de 95\,\% face à la diversité réelle des difficultés d'identification rencontrées sur le terrain.
+
+
+
+\subsection{Évaluation de la performance des méthodes}
+
+\subsubsection{Couverture marginale}
+L'objectif de cette phase est de vérifier le respect de la garantie globale ($1-\alpha$) sur l'ensemble du jeu de test. Le Tableau \ref{tab:marg_naive} et la Figure \ref{fig:sensibilite_naive} synthétisent les performances des trois méthodes.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|c|c|l|c|c|c|}
+\hline
+\textbf{Alpha ($\alpha$)} & \textbf{Cible} & \textbf{Méthode} & \textbf{Cov. Marginale} & \textbf{Taille Moy.} \\
+\hline
+\multirow{3}{*}{0,01} & \multirow{3}{*}{0,99} & Standard  & 0,9550 & 3,10 \\
+& & PAS       & 0,9574 & 9,55 \\
+& & Classwise & 0,9650 & 17,90 \\ \hline
+\multirow{3}{*}{0,05} & \multirow{3}{*}{0,95} & Standard  & \textbf{0,9138} & 1,27 \\
+& & PAS       & 0,9232 & 3,19 \\
+& & Classwise & 0,9577 & 17,47 \\ \hline
+\multirow{3}{*}{0,20} & \multirow{3}{*}{0,80} & Standard  & 0,7766 & 0,85 \\
+& & PAS       & 0,7804 & 1,80 \\
+& & Classwise & 0,8889 & 15,38 \\
+\hline
+\end{tabular}
+\caption{Performances marginales en approche naïve.}
+\label{tab:marg_naive}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig_sensibilite_naive.png}
+    \caption{Analyse de sensibilité}
+    \label{fig:sensibilite_naive}
+\end{figure}
+
+
+L'examen croisé des résultats met en évidence une rupture de la garantie statistique induite par la structure du dataset. Pour la cible standard de 95\,\% ($\alpha=0,05$), les méthodes \textbf{Standard CP} et \textbf{PAS CP} accusent un déficit de couverture critique (respectivement 91,38\,\% et 92,32\,\%). La Figure \ref{fig:sensibilite_naive} (gauche) montre que les courbes restent systématiquement sous la diagonale théorique. Ce phénomène valide notre diagnostic : en calibrant sur un échantillon amputé des 410 échecs de l'IA (troncature $< 0,001$), le quantile $\hat{q}$ est estimé sur des données artificiellement \og faciles \fg{}. Ce seuil trop optimiste s'avère incapable de couvrir les observations les plus ambiguës du jeu de test.
+\\
+À l'inverse, la méthode \textbf{Classwise CP} semble atteindre la cible, mais au prix d'une \textbf{explosion de la cardinalité}. Le graphique de droite (échelle log) illustre ce coût prohibitif : avec plus de 17 espèces proposées en moyenne, la prédiction perd toute utilité pratique. Enfin, le passage sous l'unité de la taille moyenne pour la méthode Standard à $\alpha=0,20$ (0,85) révèle la fréquence d'ensembles vides, signe que le modèle, faute de calibration adéquate, préfère s'abstenir plutôt que de fournir une réponse incertaine. Ce constat global impose la mise en œuvre de la correction du biais présentée au chapitre suivant.
+
+
+
+
+\subsubsection{Couverture conditionnelle}
+
+Au-delà de la performance globale, l'un des enjeux majeurs de ce projet est l'équité statistique entre les espèces. Dans cette section, nous analysons comment la garantie de 95\% est répartie entre les 3~082 espèces du catalogue botanique, en comparant les trois méthodes.
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|c|c|}
+\hline
+\textbf{Alpha ($\alpha$)} & \textbf{Méthode} & \textbf{Écart-type (Inter-espèces)} & \textbf{\% Espèces à couverture nulle} \\
+\hline
+\multirow{3}{*}{0,01} 
+    & Standard  & 0,0963 & 0,76\% \\
+    & PAS       & \textbf{0,0471} & \textbf{0,17\%} \\
+    & Classwise & \textbf{0,0000} & \textbf{0,00\%} \\
+\hline
+\multirow{3}{*}{0,05} 
+    & Standard  & 0,1986 & 3,18\% \\
+    & PAS       & \textbf{0,1105} & \textbf{0,85\%} \\
+    & Classwise & \textbf{0,0128} & \textbf{0,00\%} \\
+\hline
+\multirow{3}{*}{0,10} 
+    & Standard  & 0,2504 & 5,31\% \\
+    & PAS       & \textbf{0,1332} & \textbf{1,15\%} \\
+    & Classwise & \textbf{0,046} & \textbf{0,04\%} \\
+\hline
+\multirow{3}{*}{0,20} 
+    & Standard  & 0,341 & 11,71\% \\
+    & PAS       & \textbf{0,1887} & \textbf{2,21\%} \\
+    & Classwise & \textbf{0,115} & \textbf{0,42\%} \\
+\hline
+\end{tabular}
+\caption{Analyse de la dispersion de la couverture conditionnelle.}
+\label{tab:cond_naive_dispersion}
+\end{table}
+
+
+Le Tableau \ref{tab:cond_naive_dispersion} présente les mesures de dispersion de la couverture espèce par espèce. Un écart-type élevé indique que la méthode favorise certaines classes au détriment d'autres.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig_conditional_naive_alpha005.png}
+    \caption{Analyse conditionnelle ($\alpha = 0,05$)}
+    \label{fig:cond_naive_plots}
+\end{figure}
+
+
+\paragraph{Analyse et interprétation :}
+
+L'examen croisé du Tableau \ref{tab:cond_naive_dispersion} et de la Figure \ref{fig:cond_naive_plots} permet de caractériser précisément le comportement des méthodes face à l'hétérogénéité du catalogue botanique. Pour la \textbf{méthode Standard (Bleu)}, les résultats révèlent une profonde injustice statistique. Si la couverture globale semble satisfaisante, l'histogramme de gauche met en évidence une distribution bimodale où une partie significative des espèces est très mal couverte. Le graphique de droite confirme que cette approche crée une véritable \og loterie \fg{} pour les espèces rares : la fiabilité s'effondre avec la prévalence, chutant sous la barre des 40\,\% pour les classes disposant de peu d'images. Avec un écart-type élevé de 0,1986 (à $\alpha=0,05$), cette méthode privilégie mécaniquement la performance sur les espèces communes au détriment de la \textit{longue traîne}.
+
+À l'inverse, la \textbf{méthode PAS (Rouge)} agit comme un mécanisme de péréquation de la confiance. En ajustant le score par la prévalence, elle resserre drastiquement la distribution autour de la cible, ramenant l'écart-type à 0,1105. L'impact est particulièrement notable sur les \og espèces sacrifiées \fg{} (celles dont la couverture est nulle) : PAS parvient à diviser par près de quatre cette proportion, la faisant passer de 3,18\,\% à 0,85\,\%. Cette approche garantit ainsi une protection statistique minimale, même pour les classes les plus fragiles du dataset.
+
+Enfin, bien que la \textbf{méthode Classwise} présente, par construction, une dispersion quasi nulle, cette équité absolue ne peut être retenue en pratique. Comme souligné par l'analyse de la cardinalité (Section 5.1), la stabilité de la Classwise est obtenue au prix d'une extension démesurée des ensembles, confirmant que la méthode PAS constitue le meilleur \textbf{compromis de Pareto} entre précision et justice statistique. 
+
+En conclusion, ce diagnostic démontre que l'ajustement par la prévalence est indispensable pour assurer l'équité du système Pl@ntNet. Toutefois, le maintien d'un résidu d'espèces mal couvertes en mode naïf souligne l'influence persistante du biais de troncature. La restauration totale de la garantie de 95\,\% pour la \textit{longue traîne} nécessite ainsi la mise en œuvre d'une stratégie de correction du biais.
+
+
+
+
+\subsubsection{Couverture macro}
+
+La couverture macro définie comme la moyenne non pondérée des couvertures calculées pour chacune des 3082 espèces, constitue notre mesure d'équité par excellence. Elle permet d'évaluer si le système protège les espèces rares de la longue traîne au même titre que les espèces communes.
+
+
+\paragraph{Résultats}
+
+Le Tableau \ref{tab:macro_naive} synthétise les performances pour les trois méthodes étudiées sur quatre niveaux de risque $\alpha$.
+
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.0} % Espacement vertical réduit
+\setlength{\tabcolsep}{4pt} % Espacement horizontal réduit
+\begin{tabular}{|l|l|c|c|}
+\hline
+\textbf{Alpha ($\alpha$)} & \textbf{Méthode} & \textbf{Cov. Macro} & \textbf{Taille Moy.} \\
+\hline
+
+\multirow{3}{*}{0,01} & Standard  & 0,9511 & 3,10 \\
+                      & PAS       & 0,9602 & 9,55 \\
+                      & Classwise & 0,9646 & 17,90 \\
+\hline
+
+\multirow{3}{*}{0,05} & Standard  & \textbf{0,9018} & 1,27 \\
+                      & PAS       & \textbf{0,9432} & 3,19 \\
+                      & Classwise & 0,9632 & 17,47 \\
+\hline
+
+\multirow{3}{*}{0,10} & Standard  & 0,8602 & 1,05 \\
+                      & PAS       & 0,9326 & 2,43 \\
+                      & Classwise & 0,9571 & 16,81 \\
+\hline
+
+\multirow{3}{*}{0,20} & Standard  & 0,7648 & 0,85 \\
+                      & PAS       & 0,9058 & 1,80 \\
+                      & Classwise & 0,9310 & 15,38 \\
+\hline
+\end{tabular}
+\caption{Performances de la couverture macro et cardinalité des ensembles}
+\label{tab:macro_naive}
+\end{table}
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{fig_sensibilite_macro_naive.png}
+    \caption{Analyse de sensibilité}
+    \label{fig:sensibilite_macro}
+\end{figure}
+
+\paragraph{Analyse et interprétation :} 
+
+L'analyse comparative révèle un arbitrage critique illustré par les deux versants de la Figure \ref{fig:sensibilite_macro}. Pour la cible usuelle de 95\,\% ($\alpha=0,05$), la méthode \textbf{Standard CP (Bleu)} privilégie l'efficacité au prix d'une profonde injustice statistique : sa macro-couverture plafonne à 90,18\,\%, dévissant même sous les 77\,\% lorsque le risque augmente. La cardinalité moyenne inférieure à l'unité (0,85 pour $\alpha=0,20$) confirme que cette méthode \og sacrifie \fg{} les espèces rares en générant des ensembles vides plutôt que d'assumer l'incertitude liée à la faible prévalence.
+
+À l'opposé, la méthode \textbf{Classwise CP (Vert)} s'établit sur la diagonale de fiabilité parfaite, mais au prix d'une cardinalité prohibitive (plus de 17 espèces en moyenne). Entre ces deux extrêmes, la méthode \textbf{PAS CP (Rouge)} se positionne comme le meilleur \textbf{compromis de Pareto}. Elle parvient à redresser la macro-couverture vers la cible (94,32\,\%) tout en maintenant une taille d'ensemble très modérée ($\approx 3,19$). 
+
+En conclusion, ce diagnostic visuel prouve que l'ajustement par la prévalence permet de restaurer l'équité pour les espèces orphelines sans dégrader l'utilisabilité de l'application. Néanmoins, le léger décalage persistant sous la diagonale théorique confirme que le biais de troncature des données doit être traité pour stabiliser totalement ces garanties.
+
+
+
+
+\subsection{Bilan du diagnostic}
+
+L'évaluation exhaustive des trois niveaux de couverture permet de dresser un constat sans appel sur les limites de l'application directe de la \textit{conformal prediction} face aux contraintes techniques du dataset Pl@ntNet. Le résultat le plus saillant réside dans l'incapacité systémique des méthodes Standard et PAS à atteindre la cible de 95\,\%, la couverture marginale plafonnant entre 91\,\% et 92\,\%. Ce déficit de fiabilité confirme que l'omission des observations tronquées ($\hat{p} < 0{,}001$) lors de la calibration induit une sous-estimation structurelle du quantile $\hat{q}$, rendant le seuil de décision trop optimiste face à la réalité des échecs du modèle d'identification.
+
+Au-delà de cette défaillance globale, l'analyse de l'équité révèle une profonde hétérogénéité dans la répartition du risque statistique. Tandis que la méthode Standard privilégie l'efficacité au prix d'un sacrifice quasi-total des espèces de la \textit{longue traîne}, la méthode PAS démontre sa supériorité conceptuelle en redressant la couverture macro. Toutefois, cette approche reste entravée par le biais de troncature qui l'empêche de stabiliser totalement ses garanties pour les espèces orphelines. Parallèlement, le recours à une méthode Classwise stricte, bien que respectueux de la cible, aboutit à une cardinalité des ensembles incompatible avec les exigences d'utilisabilité de l'application.
+
+En conclusion, ce diagnostic rigoureux établit qu'une calibration statistiquement honnête ne peut s'affranchir d'un traitement explicite des données absentes du fichier de scores. Il devient alors impératif de restaurer l'intégrité de l'échantillon de calibration afin de neutraliser le biais de sélection identifié. Les sections suivantes sont ainsi consacrées à la mise en œuvre de stratégies d'imputation visant à réintégrer ces échecs de l'IA, étape indispensable pour valider la robustesse de la méthode PAS et garantir une fiabilité de 95\,\% sur l'ensemble du catalogue botanique.
+
+
+
+\subsection{Analyse des stratégies de correction du biais}
+
+Le diagnostic de l'approche naïve a établi que l'omission des 410 observations tronquées (3,79\,\% de l'échantillon) empêchait structurellement d'atteindre la cible de 95\,\%. Nous présentons ici l'évaluation de deux stratégies d'imputation visant à réintégrer ces échecs de l'IA dans le calcul du quantile.
+
+\subsubsection{Résultats expérimentaux des stratégies A et B}
+
+La \textbf{stratégie A} adopte une posture conservative en assignant un score de probabilité nulle ($ScoreSoftmax=0,000$) aux données manquantes, tandis que la \textbf{stratégie B} suppose une probabilité à la limite de la troncature ($Score Softmax=0,001$). Les performances comparées pour les méthodes Standard CP et PAS CP sont consignées dans les tableaux \ref{tab:strat_A} et \ref{tab:strat_B}.
+
+\begin{table}[H]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.1}
+    
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \caption{Stratégie A}
+        \label{tab:strat_A}
+        \begin{tabular}{|l|l|c|c|c|}
+            \hline
+            \textbf{$\alpha$} & \textbf{Méthode} & \textbf{Marg.} & \textbf{Macro} & \textbf{Taille} \\
+            \hline
+            0,01 & Standard & 0,9650 & 0,9646 & 17,90 \\
+                 & PAS      & 0,9650 & 0,9646 & 17,90 \\
+            \hline
+            0,05 & Standard & \textbf{0,9525} & 0,9477 & 2,66 \\
+                 & PAS      & \textbf{0,9551} & \textbf{0,9590} & 7,81 \\
+            \hline
+            0,20 & Standard & 0,8069 & 0,7937 & 0,90 \\
+                 & PAS      & 0,8104 & 0,9145 & 1,94 \\
+            \hline
+        \end{tabular}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \caption{Stratégie B}
+        \label{tab:strat_B}
+        \begin{tabular}{|l|l|c|c|c|}
+            \hline
+            \textbf{$\alpha$} & \textbf{Méthode} & \textbf{Marg.} & \textbf{Macro} & \textbf{Taille} \\
+            \hline
+            0,01 & Standard & 0,9649 & 0,9644 & 15,89 \\
+                 & PAS      & 0,9592 & 0,9621 & 13,37 \\
+            \hline
+            0,05 & Standard & \textbf{0,9525} & 0,9477 & 2,66 \\
+                 & PAS      & \textbf{0,9551} & \textbf{0,9590} & 7,81 \\
+            \hline
+            0,20 & Standard & 0,8069 & 0,7937 & 0,90 \\
+                 & PAS      & 0,8104 & 0,9145 & 1,94 \\
+            \hline
+        \end{tabular}
+    \end{minipage}
+\end{table}
+
+
+
+
+\subsubsection{Interprétation et robustesse du quantile}
+
+L'analyse croisée de ces deux stratégies révèle des propriétés fondamentales de la prédiction conformelle appliquée au dataset Pl@ntNet. 
+
+La \textbf{stabilité du quantile} constitue le premier constat majeur : l'identité numérique quasi-stricte des résultats entre les stratégies A et B pour $\alpha=0{,}05$ valide la \textbf{robustesse de la correction}. Puisque les observations tronquées représentent 3,79\,\% du jeu de données, elles se situent systématiquement dans la zone critique des 5\,\% de scores les plus faibles. Leur valeur d'imputation précise n'influe donc pas sur la position du quantile $\hat{q}$, confirmant la fiabilité du traitement face à l'incertitude du seuil de troncature.
+
+Parallèlement, la méthode PAS corrigée assure le \textbf{rétablissement de l'équité} statistique. Contrairement à l'approche naïve, elle surpasse systématiquement la méthode Standard avec une macro-couverture atteignant \textbf{95,90\,\%} pour $\alpha=0{,}05$. La garantie de fiabilité est désormais étendue de manière uniforme à l'ensemble du catalogue botanique, protégeant ainsi les espèces de la \textit{longue traîne} qui étaient initialement sacrifiées par le quantile global.
+
+Enfin, le \textbf{comportement à haut risque} observé pour $\alpha=0{,}20$ met en lumière une propriété de sécurité intrinsèque au cadre conformel. La cardinalité moyenne descendant sous l'unité (0,90) traduit la génération d'\textbf{ensembles vides} : face à des clichés trop ambigus, le modèle préfère mathématiquement s'abstenir plutôt que de fournir une réponse arbitraire. Cette capacité d'abstention constitue une information d'incertitude précieuse pour une plateforme de science citoyenne, évitant d'induire l'utilisateur en erreur dans les cas d'identification les plus complexes.
+
+
+
+
+\subsubsection{Synthèse et choix de la stratégie de référence}
+
+Pour la suite de l'étude, nous retenons la \textbf{stratégie A} comme base de référence. Son caractère conservateur assure une sécurité maximale pour l'utilisateur. Nous avons démontré que la méthode PAS est la seule capable de concilier la garantie globale de Pl@ntNet et l'équité nécessaire à la protection des espèces rares de la longue traîne.
+
+
+
+
+\subsection{Température scaling}
+
+Bien que la \textit{conformal prediction} garantisse une couverture de $1-\alpha$ quelle que soit la qualité du modèle de base, la taille des ensembles produits (efficacité) dépend fortement du calibrage des probabilités en sortie du softmax. Une technique standard pour affiner cette efficacité est le Temperature Scaling (Dabah et Tirer, 2024)
+
+
+\paragraph{Formulation mathématique}
+Soit $\hat{p}(y|x)$ la probabilité brute issue du modèle Pl@ntNet. On introduit un paramètre de température $T > 0$ pour transformer le score original en un score recalibré $\hat{p}_T(y|x)$ :
+\begin{equation}
+    \hat{p}_T(y|x) = \frac{\hat{p}(y|x)^{1/T}}{\sum_{j=1}^{K} \hat{p}(j|x)^{1/T}}
+\end{equation}
+
+
+\paragraph{Impact sur la conformal prediction}
+L'application de cette transformation possède deux propriétés majeures :
+\begin{enumerate}
+    \item \textbf{Invariance de l'ordre :} La transformation étant monotone, l'ordre de classement des espèces n'est pas modifié. 
+    \item \textbf{Ajustement de la confiance :} 
+    \begin{itemize}
+        \item Si $T < 1$, les probabilités élevées sont accentuées (le modèle devient \og sur-confiant \fg{}).
+        \item Si $T > 1$, la distribution est lissée (le modèle devient \og plus hésitant \fg{}).
+    \end{itemize}
+\end{enumerate}
+
+Dans le cadre de ce projet, l'objectif est d'évaluer si une modification de $T$ permet de réduire la cardinalité moyenne des ensembles de prédiction tout en maintenant les garanties de couverture marginale et macro sur les 10~812 observations réelles (incluant les corrections de biais).
+
+
+
+
+\subsubsection{Optimisation de l'efficacité}
+
+Cette ultime phase expérimentale explore l'influence du paramètre de température $T$ sur le calibrage des probabilités \textit{softmax}. Bien que la \textit{conformal prediction} garantisse mathématiquement la couverture cible quel que soit le score utilisé, le choix de $T$ constitue un levier majeur pour optimiser la cardinalité des ensembles (efficacité), particulièrement pour la méthode PAS.
+
+Nous avons fait varier $T$ dans l'intervalle $[0,5 ; 2,0]$ pour les deux stratégies de correction du biais. Les Tableaux \ref{tab:temp_comparison} présentent les résultats obtenus pour une cible $\alpha = 0,05$.
+
+\begin{table}[H]
+\centering
+\caption{Impact de la température sur les performances (Cible 95\%)}
+\label{tab:temp_comparison}
+
+\begin{minipage}{0.48\textwidth}
+    \centering
+    \subcaption{Stratégie A}
+    \begin{tabular}{|c|l|c|c|c|}
+    \hline
+    \textbf{T} & \textbf{Méthode} & \textbf{Marg.} & \textbf{Macro} & \textbf{Taille} \\
+    \hline
+    0,5 & Standard & 0,9525 & 0,9477 & 2,66 \\
+        & PAS      & 0,9539 & 0,9532 & \textbf{3,99} \\
+    \hline
+    1,0 & Standard & 0,9525 & 0,9477 & 2,66 \\
+        & PAS      & 0,9550 & 0,9590 & 7,81 \\
+    \hline
+    2,0 & Standard & 0,9525 & 0,9477 & 2,66 \\
+        & PAS      & 0,9555 & 0,9624 & 15,70 \\
+    \hline
+    \end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+    \centering
+    \subcaption{Stratégie B}
+    \begin{tabular}{|c|l|c|c|c|}
+    \hline
+    \textbf{T} & \textbf{Méthode} & \textbf{Marg.} & \textbf{Macro} & \textbf{Taille} \\
+    \hline
+    0,5 & Standard & 0,9525 & 0,9477 & 2,66 \\
+        & PAS      & 0,9539 & 0,9532 & \textbf{3,99} \\
+    \hline
+    1,0 & Standard & 0,9525 & 0,9477 & 2,66 \\
+        & PAS      & 0,9550 & 0,9590 & 7,81 \\
+    \hline
+    2,0 & Standard & 0,9525 & 0,9477 & 2,66 \\
+        & PAS      & \textbf{0,9237} & 0,9567 & 14,49 \\
+    \hline
+    \end{tabular}
+\end{minipage}
+\end{table}
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig_temperature_scaling_comparison.png}
+    \caption{Impact de la température $T$ sur la taille moyenne des ensembles}
+    \label{fig:temp_scaling_plots}
+\end{figure}
+
+
+\subsubsection{Analyse et interprétation des résultats}
+
+L'analyse de la Figure \ref{fig:temp_scaling_plots} révèle des propriétés fondamentales du cadre conformel appliqué au dataset Pl@ntNet.
+
+Tout d'abord, on observe une invariance absolue de la méthode Standard CP vis-à-vis du paramètre $T$. La couverture ($0,9525$) et la taille des ensembles ($2,66$) restent strictement constantes, illustrant la robustesse de la \textit{conformal prediction} standard aux transformations monotones des scores. Le quantile s'ajuste dynamiquement à la déformation des probabilités, neutralisant ainsi tout gain potentiel d'efficacité par simple temperature scaling.
+
+À l'inverse, la méthode PAS s'avère extrêmement sensible au réglage de la température. Une réduction du paramètre ($T=0,5$) permet de diviser la cardinalité moyenne des ensembles par deux (passant de $7,81$ à $3,99$) tout en préservant une couverture macro de $95,3\%$. En \og durcissant \fg{} la distribution des scores, la température facilite l'exclusion des classes non-pertinentes par le mécanisme de pondération par la prévalence. 
+
+Il convient toutefois de noter une instabilité de la stratégie B à haute température ($T=2,0$), où l'on observe un décrochage de la couverture marginale ($0,9237$). L'application d'un exposant élevé sur une valeur d'imputation non-nulle ($0,001^{0,5} \approx 0,031$) réduit trop fortement l'écart entre les scores de calibration et de test, brisant la validité du quantile. La stratégie A s'impose donc comme la plus robuste pour supporter ces transformations.
+
+\vspace{1cm}
+En conclusion de cette étude, nous préconisons l'utilisation du couple (méthode PAS CP, température $T=0,5$). Ce réglage constitue le \og point de Pareto \fg{} optimal identifié dans ce projet : il réconcilie la justice statistique envers les espèces rares (Macro-Cov $\approx 95\%$) avec une ergonomie optimisée pour l'utilisateur final, en limitant les suggestions à moins de 4 espèces en moyenne.
+
+
+
+\newpage
+\section{Conclusion et Perspectives}
+
+Ce projet de a permis de démontrer l'efficacité et la nécessité de la \textit{conformal prediction} pour sécuriser l'identification botanique au sein de l'application Pl@ntNet. En confrontant la théorie aux contraintes d'un dataset déséquilibré, nous avons identifié les leviers critiques pour transformer une IA probabiliste en un outil de décision fiable et équitable.
+
+
+
+
+\subsection{Bilan des travaux}
+
+Nos recherches ont abouti à trois conclusions majeures : 
+
+Tout d'abord, la restauration de la validité statistique a prouvé que l'omission des observations tronquées biaise l'estimation de l'incertitude. L'adoption de la stratégie A s'est avérée indispensable pour restaurer l'intégrité de la garantie marginale de 95\,\% sur l'ensemble du catalogue.
+
+Ensuite, la supériorité de la méthode PAS CP pour la longue traîne a été démontrée : face aux 79,9\,\% d'espèces rares du dataset de validation, PAS CP s'impose comme la solution optimale. En ajustant les scores par la prévalence, elle rétablit une macro-couverture de 95,9\,\%, offrant une protection statistique uniforme sans subir l'explosion de cardinalité de l'approche Classwise CP.
+
+Enfin, l'optimisation par le temperature scaling a révélé un levier d'efficience inédit. Tandis que la méthode Standard CP reste invariante, nous avons prouvé qu'une température faible (\textbf{$T=0,5$}) permet de diviser par deux la cardinalité moyenne des ensembles de la méthode PAS CP tout en préservant ses garanties d'équité.
+
+
+
+\subsection{Perspectives}
+
+Plusieurs pistes de recherche pourraient prolonger cette étude :
+
+L'ajustement par l'importance écologique \cite{Ding2025} permettrait, via l'intégration des statuts de l'UICN(Union Internationale pour la Conservation de la Nature), de sur-protéger les espèces en danger critique, transformant l'IA en un instrument actif de préservation de la biodiversité.
+
+Sur le plan applicatif, le développement d'une interface utilisateur adaptative, où le nombre de suggestions évolue dynamiquement selon la qualité de l'image via le quantile calculé, représenterait une avancée majeure pour l'ergonomie de Pl@ntNet.
+
+Enfin, une généralisation géographique du pipeline aux données mondiales permettrait de vérifier la robustesse de ces équilibres de couverture sur des écosystèmes à plus haute dimensionnalité.
+
+En conclusion, la méthode PAS CP, optimisée par une réduction de la température, constitue le \og point de Pareto \fg{} de notre étude. Elle réconcilie la rigueur mathématique de la garantie statistique avec l'impératif d'équité nécessaire à la science citoyenne.
+
+
+
+
+\section{Remerciements}
+
+Nous tenons tout d'abord à exprimer notre profonde gratitude à notre encadrant, \textbf{M. Joseph Salmon}, pour nous avoir proposé ce sujet passionnant à la frontière entre la recherche statistique et les enjeux écologiques. Nous lui remercions pour sa disponibilité, ces précieux conseils méthodologiques, ainsi que pour les ressources pédagogiques mises à notre disposition, notamment à travers les travaux récents sur la méthode PAS CP.
+
+Nous remercions également l'équipe pédagogique du Master 1 Statistique et Science des Données (SSD) de l'Université de Montpellier pour la qualité de la formation reçue, qui nous a fourni les outils nécessaires à la réalisation de ce projet.
+
+Enfin, nos remerciements s'adressent à l'équipe Pl@ntNet et aux contributeurs de la plateforme Zenodo pour la mise à disposition du dataset CrowdSWE, sans lequel cette étude n'aurait pu voir le jour.
+
+
+
+\begin{thebibliography}{9}
+
+\bibitem{Angelopoulos2021} 
+\textsc{Angelopoulos, A. N., \& Bates, S.} (2021). A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification. \href{https://doi.org/10.48550/arXiv.2107.07511}{https://doi.org/10.48550/arXiv.2107.07511}
+
+\bibitem{Ding2025} 
+\textsc{Ding, T., Fermanian, J. B., \& Salmon, J.} (2025). Conformal Prediction for Long-Tailed Classification. ICLR 2025. \href{https://josephsalmon.eu/blog/long-tail/}{https://josephsalmon.eu/blog/long-tail/}
+
+\bibitem{Python} 
+\textsc{Python Software Foundation} (2023). Python: A Dynamic, Open Source Programming Language. \href{https://www.python.org/}{https://www.python.org/}
+
+\bibitem{Lefort2024} 
+\textsc{Lefort, T., et al.} (2024). Pl@ntNet collaborative learning: South-Western-Europe dataset. \href{https://arxiv.org/abs/2406.03356}{https://arxiv.org/abs/2406.03356}
+
+\bibitem{Sadinle2019} 
+\textsc{Sadinle, M., Lei, J., \& Wasserman, L.} (2019). Least Ambiguous Set-Valued Classifiers with Bounded Error Levels. \textit{Journal of the American Statistical Association}. \href{https://doi.org/10.1080/01621459.2018.1442340}{https://doi.org/10.1080/01621459.2018.1442340}
+
+\bibitem{Romano2020} 
+\textsc{Romano, Y., Sesia, M., \& Candès, E. J.} (2020). Classification with Valid and Adaptive Coverage. \textit{NeurIPS}. \href{https://doi.org/10.48550/arXiv.2006.02544}{https://doi.org/10.48550/arXiv.2006.02544}
+
+\bibitem{Vovk2005} 
+\textsc{Vovk, V., Gammerman, A., \& Shafer, G.} (2005). \textit{Algorithmic Learning in a Random World}. Springer Science \& Business Media. \href{https://link.springer.com/book/10.1007/b106715}{https://link.springer.com/book/10.1007/b106715}
+
+\bibitem{Aigoin2025}
+\textsc{Aigoin, E., Cletz, L., \& Thomas, A. L.} (2025). Prédiction conformelle et base de données Pl@ntNet-CrowdSWE. 
+\href{https://github.com/lcletz/PLANTNET_M1_SSD}
+{https://github.com/lcletz/PLANTNET_M1_SSD}
+
+
+
+\end{thebibliography}
+
+\end{document}
+
+
